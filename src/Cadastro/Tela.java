@@ -236,10 +236,12 @@ public class Tela extends JFrame {
         JButton botaoCadastrar = criarBotaoAcao("Cadastrar", COR_DESTAQUE);
         JButton botaoSalvar = criarBotaoAcao("Salvar", COR_BOTAO);
         JButton botaoExibir = criarBotaoAcao("Exibir Tudo", COR_BOTAO);
+        JButton botaoRemover = criarBotaoAcao("Remover", new Color(200, 50, 50));
 
         painelBotoes.add(botaoCadastrar);
         painelBotoes.add(botaoExibir);
         painelBotoes.add(botaoSalvar);
+        painelBotoes.add(botaoRemover);
 
         // Ações dos botões
         botaoExibir.addActionListener(e -> {
@@ -280,6 +282,40 @@ public class Tela extends JFrame {
         botaoSalvar.addActionListener(e -> {
             Salvar.salvarDados(lista, categoria.toLowerCase().replace(" ", "") + ".json");
             JOptionPane.showMessageDialog(this, "Salvo com sucesso!");
+        });
+
+        botaoRemover.addActionListener(e -> {
+            Cadastro selecionado = listaLivros.getSelectedValue();
+            if (selecionado == null) {
+                JOptionPane.showMessageDialog(this, "Selecione um livro para remover!");
+                return;
+            }
+
+            int confirmacao = JOptionPane.showConfirmDialog(
+                    this,
+                    "Tem certeza que deseja remover \"" + selecionado.getNomeDoLivro() + "\"?",
+                    "Confirmar remoção",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirmacao == JOptionPane.YES_OPTION) {
+                lista.remove(selecionado);
+                modeloLista.removeElement(selecionado);
+
+                // Limpa a seleção e atualiza o painel de detalhes imediatamente
+                listaLivros.clearSelection();
+                lblTituloInfo.setText("Selecione um livro");
+                txtInfo.setText("Clique em um item da lista para ver os detalhes.");
+
+                // Força a atualização visual da lista
+                listaLivros.revalidate();
+                listaLivros.repaint();
+
+                // Salva automaticamente
+                Salvar.salvarDados(lista, categoria.toLowerCase().replace(" ", "") + ".json");
+
+                JOptionPane.showMessageDialog(this, "Livro removido com sucesso!");
+            }
         });
 
         // --- 5. MONTAGEM FINAL ---
