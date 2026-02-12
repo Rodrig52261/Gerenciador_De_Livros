@@ -27,4 +27,6 @@ Tela: Gerenciador da interface gráfica e eventos de usuário.
 
 <img width="934" height="689" alt="image" src="https://github.com/user-attachments/assets/522529a8-1f72-45dc-a674-f42d37722a2d" />
 <img width="929" height="690" alt="image" src="https://github.com/user-attachments/assets/99bf33c9-44a7-4c8b-85da-34f908f1ce29" />
+<img width="1359" height="765" alt="image" src="https://github.com/user-attachments/assets/bb08f77f-2896-4e25-b267-b057521c4a31" />
+
 
