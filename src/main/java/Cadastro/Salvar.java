@@ -11,30 +11,28 @@ public class Salvar {
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    // Método para salvar qualquer lista de livros em um arquivo específico
+    // CORREÇÃO: Removido o prefixo Cadastro.Main.java do tipo da lista
     public static void salvarDados(ArrayList<Cadastro> lista, String nomeArquivo) {
-        try (FileWriter writer = new FileWriter(nomeArquivo)) {
+        try (Writer writer = new FileWriter(nomeArquivo)) {
             gson.toJson(lista, writer);
         } catch (IOException e) {
-            System.err.println("Erro ao salvar arquivo " + nomeArquivo + ": " + e.getMessage());
+            System.err.println("Erro ao salvar arquivo: " + e.getMessage());
         }
     }
 
-    // Método para carregar os dados de volta para a lista
     public static ArrayList<Cadastro> carregarDados(String nomeArquivo) {
         File arquivo = new File(nomeArquivo);
         if (!arquivo.exists()) {
-            return new ArrayList<>(); // Retorna lista vazia se o arquivo não existir ainda
+            return new ArrayList<>();
         }
 
-        try (FileReader reader = new FileReader(nomeArquivo)) {
-            Type tipoLista = new TypeToken<ArrayList<Cadastro>>(){}.getType();
+        try (Reader reader = new FileReader(nomeArquivo)) {
+            Type tipoLista = new TypeToken<ArrayList<Cadastro>>() {}.getType();
             ArrayList<Cadastro> lista = gson.fromJson(reader, tipoLista);
             return (lista != null) ? lista : new ArrayList<>();
         } catch (IOException e) {
+            System.err.println("Erro ao carregar arquivo: " + e.getMessage());
             return new ArrayList<>();
         }
     }
-
-
 }

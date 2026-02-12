@@ -1,16 +1,10 @@
 [
   {
-    "nomeDoLivro": "Confissões de Santo Agostinho",
-    "autor": "Agostinho de Hipona",
-    "biografia": "Neste livro autobiográfico, Santo Agostinho registrou suas reflexões, cujo propósito é aproximar as pessoas de Deus, assim como ele próprio foi convertido do maniqueísmo - a doutrina que postula um conflito entre o reino da luz e o das sombras - para o cristianismo.As conclusões às quais Santo Agostinho chegou têm relevância para as aspirações espirituais tanto de homens quanto de mulheres nos dias atuais. Esse pensador da Antiguidade enfatiza, antes de tudo, que a \"palavra de Deus é edificante quando usada de maneira legítima, pois seu propósito é promover a caridade, que brota de um coração puro, de uma boa consciência e de uma fé genuína.\" Agostinho ressalta que, segundo Cristo, todos os mandamentos e profecias se resumem a dois princípios fundamentais. Esta edição especial traz capa dura com acabamento almofadado, conferindo um toque de elegância e durabilidade à obra. Além disso, inclui um marcador de páginas de fitilho, proporcionando aos leitores uma experiência ainda mais prazerosa. Uma obra indispensável na biblioteca de qualquer leitor.",
-    "qtdPag": 240,
-    "paginasLidas": 240
-  },
-  {
     "nomeDoLivro": "Tudo vai ficar bem",
     "autor": "Jojo Moyes ",
     "biografia": "Lila Kennedy achava que tinha a família perfeita: mãe acolhedora, padrasto carinhoso, duas filhas maravilhosas e um marido incrível. Só que, duas semanas após ela publicar um livro sobre como ter um relacionamento inabalável, seu marido pede o divórcio. E, menos de um ano depois, sua mãe morre de maneira trágica, transformando por completo a visão de Lila sobre a vida.\n\nAgora, com a carreira ameaçada, a casa caindo aos pedaços, o padrasto idoso que parece ter se mudado de vez para a casa dela e as emoções à flor da pele por conta das adversidades dos últimos dois anos, Lila se sente, no mínimo, sobrecarregada. Para dar um jeito ao menos nos problemas financeiros, ela ainda se comprometeu a escrever um novo livro sobre as alegrias de ser solteira e todas as desventuras românticas que tem vivido. O único problema é que, desde que se separou, ela não chegou nem perto de flertar com ninguém.\n\nComo se já não bastasse tudo isso, o pai biológico dela, Gene ― um homem egocêntrico que mal a viu nas últimas três décadas ―, reaparece querendo fazer as pazes e, sem outro lugar para ficar, passa a morar na casa da filha também. Depois de tanto tempo longe, a presença dele promete causar grandes mudanças ― mas será que vão salvar a família ou destruí-la para sempre?",
     "qtdPag": 352,
-    "paginasLidas": 352
+    "paginasLidas": 352,
+    "ultimaPagina": 0
   }
 ]
