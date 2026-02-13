@@ -1,20 +1,20 @@
 [
   {
-    "nomeDoLivro": "O estrangeiro",
-    "autor": "Albert Camus",
-    "biografia": "O estrangeiro  narra a história de um homem comum que se depara com o absurdo da condição humana depois que comete um crime quase inconscientemente. Meursault, que vivia sua liberdade de ir e vir sem ter consciência dela, subitamente perde-a envolvido pelas circunstâncias e acaba descobrindo uma liberdade maior e mais assustadora na própria capacidade de se autodeterminar. Uma reflexão sobre liberdade e condição humana que deixou marcas profundas no pensamento ocidental. Uma das mais belas narrativas deste século.\n\nEscrito em 1957, O estrangeiro é o mais pop(ular) dos livros do francês nascido na Argélia Albert Camus. Tão pop que rendeu até música do grupo de rock inglês The Cure (“Killing an Arab”). Tão popular porque, à parte ser a seca narrativa das desventuras de Mersault, é também a narrativa das desventuras do homem do século XX. Uma espécie de autobiografia de todo mundo. Seu drama pode ser lido como o drama de qualquer homem do século, o homem que se depara com o absurdo, ponto central do pensamento camusiano.\n\nQuando Mersault descobre que absurdo e liberdade são faces da mesma moeda e que uma implica na outra, afinal encontra a paz. É a história dessa compreensão, desse encontro, que Camus nos propõe. O estrangeiro se apresenta como uma espécie um tanto perversa de livro de autoajuda.",
-    "qtdPag": 100,
-    "paginasLidas": 16,
-    "pathPDF": "C:\\Users\\mcbil\\Downloads\\Albert Camus - O estrangeiro.pdf",
-    "ultimaPagina": 16
+    "nomeDoLivro": "Antoine De Saint-Exupéry - O Pequeno Príncipe",
+    "autor": "Tiemi",
+    "biografia": "Erro ao buscar biografia online.",
+    "qtdPag": 69,
+    "paginasLidas": 6,
+    "pathPDF": "C:\\Users\\mcbil\\Downloads\\O_Pequeno_Príncipe.pdf",
+    "ultimaPagina": 6
   },
   {
-    "nomeDoLivro": "Sapiens (Nova edição): Uma breve história da humanidade",
-    "autor": " Yuval Noah Harari ",
-    "biografia": "Sem biografia",
-    "qtdPag": 472,
+    "nomeDoLivro": "Arquitetura Limpa - O Guia do Artesão para Estrutura e Design de Software",
+    "autor": "Robert C. Martin",
+    "biografia": "Erro ao buscar biografia online.",
+    "qtdPag": 381,
     "paginasLidas": 20,
-    "pathPDF": "C:\\Users\\mcbil\\Downloads\\Sapiens uma Breve História da Humanidade - Yuval Noah Harari.pdf",
+    "pathPDF": "C:\\Users\\mcbil\\Downloads\\Arquitetura Limpa - O Guia do Artesão para Estrutura e Design de Software (Robert C. Martin) (z-lib.org).pdf",
     "ultimaPagina": 20
   }
 ]

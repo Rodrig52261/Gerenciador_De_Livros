@@ -35,6 +35,7 @@ public class Tela extends JFrame {
     private ArrayList<Cadastro> livrosLidos;
     private ArrayList<Cadastro> livrosLendo;
     private ArrayList<Cadastro> livrosParaLer;
+    private final String PASTA_DADOS = "dados/";
 
     public Tela() {
         setTitle("Gerenciador de Leitura Pessoal");
@@ -58,9 +59,24 @@ public class Tela extends JFrame {
         barraProgresso.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // 2. Carregar Dados
-        this.livrosLidos = Salvar.carregarDados("lidos.json");
-        this.livrosLendo = Salvar.carregarDados("lendo.json");
-        this.livrosParaLer = Salvar.carregarDados("querolar.json");
+        String caminho = "dados/";
+        File pasta = new File(caminho);
+        if (!pasta.exists()) pasta.mkdir(); // Cria a pasta se ela não existir
+
+        this.livrosLidos = Salvar.carregarDados(caminho + "lidos.json");
+        this.livrosLendo = Salvar.carregarDados(caminho + "lendo.json");
+        this.livrosLendo = Salvar.carregarDados(caminho + "QueroLer.json");
+
+        // Cria a pasta física se ela não existir
+        File pastaDois = new File(PASTA_DADOS);
+        if (!pasta.exists()) {
+            pasta.mkdirs();
+        }
+
+        // Agora carrega usando o caminho da pasta
+        this.livrosLidos = Salvar.carregarDados(PASTA_DADOS + "lidos.json");
+        this.livrosLendo = Salvar.carregarDados(PASTA_DADOS + "lendo.json");
+        this.livrosParaLer = Salvar.carregarDados(PASTA_DADOS + "querolar.json");
 
         // 3. Montar Interface
         add(criarMenuLateral(), BorderLayout.WEST);
@@ -114,62 +130,110 @@ public class Tela extends JFrame {
         janela.getContentPane().setBackground(COR_PAINEL);
         janela.setLayout(new BorderLayout());
 
-        JPanel painelForm = new JPanel(new GridLayout(0, 1, 5, 5));
+        final String[] biografiaCapturada = {""};
+        final String[] caminhoPDF = {null};
+
+        // 1. Painel Superior (Destaque para o PDF)
+        JPanel painelTopo = new JPanel(new BorderLayout(10, 10));
+        painelTopo.setBackground(COR_PAINEL);
+        painelTopo.setBorder(new EmptyBorder(20, 30, 10, 30));
+
+        JButton btnPDF = criarBotaoAcao("📁 SELECIONAR ARQUIVO PDF", COR_DESTAQUE);
+        JLabel lblArq = new JLabel("Nenhum arquivo selecionado", SwingConstants.CENTER);
+        lblArq.setForeground(Color.GRAY);
+        lblArq.setFont(new Font("Segoe UI", Font.ITALIC, 11));
+
+        painelTopo.add(btnPDF, BorderLayout.NORTH);
+        painelTopo.add(lblArq, BorderLayout.SOUTH);
+
+        // 2. Painel de Formulário (Campos Desabilitados)
+        JPanel painelForm = new JPanel(new GridLayout(0, 1, 2, 2));
         painelForm.setBackground(COR_PAINEL);
-        painelForm.setBorder(new EmptyBorder(20, 30, 20, 30));
+        painelForm.setBorder(new EmptyBorder(10, 30, 20, 30));
 
         JTextField campoNome = criarCampo();
         JTextField campoAutor = criarCampo();
         JTextField campoPaginas = criarCampo();
-        final String[] caminhoPDF = {null};
 
-        JButton btnPDF = criarBotaoAcao("📁 Selecionar PDF", COR_BOTAO);
-        JLabel lblArq = new JLabel("Nenhum arquivo");
-        lblArq.setForeground(Color.GRAY);
+        // Desabilitando a edição manual para forçar a automação
+        campoNome.setEditable(false);
+        campoAutor.setEditable(false);
+        campoPaginas.setEditable(false);
 
-        btnPDF.addActionListener(e -> {
-            JFileChooser fc = new JFileChooser();
-            fc.setFileFilter(new FileNameExtensionFilter("PDFs", "pdf"));
-            if (fc.showOpenDialog(janela) == JFileChooser.APPROVE_OPTION) {
-                caminhoPDF[0] = fc.getSelectedFile().getAbsolutePath();
-                lblArq.setText(fc.getSelectedFile().getName());
-            }
-        });
+        // Estética de campo desabilitado mas legível
+        Color corDesabilitado = new Color(70, 70, 70);
+        campoNome.setBackground(corDesabilitado);
+        campoAutor.setBackground(corDesabilitado);
+        campoPaginas.setBackground(corDesabilitado);
 
         String[] cats = {"Lidos", "Lendo", "Quero Ler"};
         JComboBox<String> combo = new JComboBox<>(cats);
 
-        painelForm.add(criarLabel("Título:")); painelForm.add(campoNome);
-        painelForm.add(criarLabel("Autor:")); painelForm.add(campoAutor);
-        painelForm.add(criarLabel("Páginas:")); painelForm.add(campoPaginas);
-        painelForm.add(criarLabel("Categoria:")); painelForm.add(combo);
-        painelForm.add(btnPDF); painelForm.add(lblArq);
+        painelForm.add(criarLabel("Título extraído:")); painelForm.add(campoNome);
+        painelForm.add(criarLabel("Autor extraído:")); painelForm.add(campoAutor);
+        painelForm.add(criarLabel("Total de páginas:")); painelForm.add(campoPaginas);
+        painelForm.add(criarLabel("Mover para categoria:")); painelForm.add(combo);
 
-        JButton btnSalvar = criarBotaoAcao("Salvar", new Color(40, 167, 69));
-        btnSalvar.addActionListener(e -> {
-            try {
-                Cadastro n = new Cadastro();
-                // Usando o método que você criou na classe Cadastro
-                n.criarCadastro(campoNome.getText(), campoAutor.getText(), "",
-                        Integer.parseInt(campoPaginas.getText()), 0, caminhoPDF[0]);
+        // --- Lógica de Automação ---
+        btnPDF.addActionListener(e -> {
+            JFileChooser fc = new JFileChooser();
+            fc.setFileFilter(new FileNameExtensionFilter("Arquivos PDF", "pdf"));
 
-                String selRaw = (String) combo.getSelectedItem();
-                String sel = selRaw.toLowerCase().replace(" ", "");
+            if (fc.showOpenDialog(janela) == JFileChooser.APPROVE_OPTION) {
+                File arquivo = fc.getSelectedFile();
+                caminhoPDF[0] = arquivo.getAbsolutePath();
+                lblArq.setText("✔ " + arquivo.getName());
+                lblArq.setForeground(COR_DESTAQUE);
 
-                if (sel.equals("lidos")) livrosLidos.add(n);
-                else if (sel.equals("lendo")) livrosLendo.add(n);
-                else livrosParaLer.add(n);
+                try (org.apache.pdfbox.pdmodel.PDDocument doc = org.apache.pdfbox.Loader.loadPDF(arquivo)) {
+                    var info = doc.getDocumentInformation();
 
-                Salvar.salvarDados(sel.equals("lidos") ? livrosLidos :
-                        sel.equals("lendo") ? livrosLendo : livrosParaLer, sel + ".json");
+                    String titulo = (info.getTitle() != null && !info.getTitle().isEmpty())
+                            ? info.getTitle() : arquivo.getName().replace(".pdf", "");
 
-                modelosMap.get(sel).addElement(n);
-                janela.dispose();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(janela, "Erro: Verifique se as páginas são números.");
+                    campoNome.setText(titulo);
+                    campoAutor.setText(info.getAuthor() != null ? info.getAuthor() : "Não identificado");
+                    campoPaginas.setText(String.valueOf(doc.getNumberOfPages()));
+
+                    // Busca Biografia em Background
+                    new Thread(() -> {
+                        String[] infoExtra = LivroService.buscarInfoExtra(titulo);
+                        biografiaCapturada[0] = infoExtra[0];
+                    }).start();
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(janela, "Falha ao processar PDF.");
+                }
             }
         });
 
+        // 3. Botão Salvar (Rodapé)
+        JButton btnSalvar = criarBotaoAcao("Confirmar e Salvar", new Color(40, 167, 69));
+        btnSalvar.addActionListener(e -> {
+            if (caminhoPDF[0] == null) {
+                JOptionPane.showMessageDialog(janela, "Por favor, selecione um PDF primeiro.");
+                return;
+            }
+
+            Cadastro n = new Cadastro();
+            n.criarCadastro(campoNome.getText(), campoAutor.getText(), biografiaCapturada[0],
+                    Integer.parseInt(campoPaginas.getText()), 0, caminhoPDF[0]);
+
+            String sel = ((String) combo.getSelectedItem()).toLowerCase().replace(" ", "");
+
+            // Lógica de lista dinâmica
+            if (sel.equals("lidos")) livrosLidos.add(n);
+            else if (sel.equals("lendo")) livrosLendo.add(n);
+            else livrosParaLer.add(n);
+
+            Salvar.salvarDados(sel.equals("lidos") ? livrosLidos :
+                    sel.equals("lendo") ? livrosLendo : livrosParaLer, sel + ".json");
+
+            modelosMap.get(sel).addElement(n);
+            janela.dispose();
+        });
+
+        janela.add(painelTopo, BorderLayout.NORTH);
         janela.add(painelForm, BorderLayout.CENTER);
         janela.add(btnSalvar, BorderLayout.SOUTH);
         janela.setVisible(true);

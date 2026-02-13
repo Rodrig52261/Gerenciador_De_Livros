@@ -33,6 +33,14 @@ public class executaPDF extends JFrame {
         setSize(900, 800);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                // Re-renderiza a página para ajustar ao novo tamanho da janela
+                if (documento != null) {
+                    renderizarPagina();
+                }
+            }
+        });
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(30, 30, 30));
 
@@ -63,6 +71,10 @@ public class executaPDF extends JFrame {
         scrollPane.setBackground(new Color(30, 30, 30));
         scrollPane.setBorder(new EmptyBorder(10, 10, 10, 10));
 
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Scroll mais suave
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // Remove scroll horizontal se estiver ajustado
+        scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         add(painelNav, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -75,6 +87,14 @@ public class executaPDF extends JFrame {
                 paginaAtual--;
                 renderizarPagina();
             }
+
+            this.addComponentListener(new java.awt.event.ComponentAdapter() {
+                @Override
+                public void componentResized(java.awt.event.ComponentEvent e) {
+                    // Quando você esticar a janela, ele redesenha o PDF para caber na largura
+                    renderizarPagina();
+                }
+            });
         });
 
         btnProximo.addActionListener(e -> {
@@ -115,13 +135,23 @@ public class executaPDF extends JFrame {
 
     private void renderizarPagina() {
         try {
-            // Renderiza a página em alta qualidade (DPI 150)
-            BufferedImage imagem = renderer.renderImageWithDPI(paginaAtual, 150);
-            lblImagem.setIcon(new ImageIcon(imagem));
+            BufferedImage img = renderer.renderImageWithDPI(paginaAtual, 100); // DPI 100 é mais rápido para redimensionar
+
+            // Calcula a largura disponível no ScrollPane
+            int larguraDisponivel = scrollPane.getWidth() - 40;
+            if (larguraDisponivel < 100) larguraDisponivel = 800;
+
+            // Redimensiona mantendo a proporção
+            double ratio = (double) larguraDisponivel / img.getWidth();
+            int novaAltura = (int) (img.getHeight() * ratio);
+
+            Image imgAjustada = img.getScaledInstance(larguraDisponivel, novaAltura, Image.SCALE_SMOOTH);
+            lblImagem.setIcon(new ImageIcon(imgAjustada));
+
+            // Atualiza o texto de progresso
             lblPagina.setText("Página " + (paginaAtual + 1) + " de " + totalPaginas);
-            scrollPane.getVerticalScrollBar().setValue(0);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao renderizar página: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
