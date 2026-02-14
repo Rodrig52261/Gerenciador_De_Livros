@@ -105,15 +105,21 @@ public class executaPDF extends JFrame {
         });
 
         // Salva o progresso ao fechar
+        // Salva o progresso ao fechar
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
+                // Salva a página onde o usuário parou
                 livro.setUltimaPagina(paginaAtual);
 
-                // Agora o erro some, pois listaParaSalvar existe aqui!
-                Salvar.salvarDados(listaParaSalvar, "lendo.json");
+                // Opcional: Se quiser que o progresso apareça como "Página 10"
+                // e não "Página 9" (índice 0), você pode ajustar aqui ou no getter.
 
                 fecharPDF();
+
+                // DICA: Como passamos a 'listaParaSalvar', podemos forçar um salvamento
+                // aqui para garantir que o progresso não se perca se o PC desligar.
+                Salvar.salvarDados(listaParaSalvar, "dados/lendo.json");
             }
         });
     }

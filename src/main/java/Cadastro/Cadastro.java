@@ -83,4 +83,20 @@ public class Cadastro {
             System.out.println("Erro ao salvar: " + e.getMessage());
         }
     }
+
+    public void setNomeDoLivro(String nomeDoLivro) {
+        this.nomeDoLivro = nomeDoLivro;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
+
+    public void setQtdPag(int qtdPag) {
+        this.qtdPag = qtdPag;
+    }
+
+    public void setBiografia(String biografia) {
+        this.biografia = biografia;
+    }
 }

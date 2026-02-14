@@ -18,6 +18,8 @@ public class Salvar {
         } catch (IOException e) {
             System.err.println("Erro ao salvar arquivo: " + e.getMessage());
         }
+        File file = new File(nomeArquivo);
+        file.getParentFile().mkdirs(); // Cria a pasta 'dados' se ela não existir
     }
 
     public static ArrayList<Cadastro> carregarDados(String nomeArquivo) {

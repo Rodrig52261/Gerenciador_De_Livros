@@ -1,0 +1,11 @@
+[
+  {
+    "nomeDoLivro": "Arquitetura Limpa - O Guia do Artesão para Estrutura e Design de Software",
+    "autor": "Robert C. Martin",
+    "biografia": "A Série Universitária foi desenvolvida pelo Senac São Paulo com o intuito de preparar profissionais para o mercado de trabalho. Os títulos abrangem diversas áreas, abordando desde conhecimentos teóricos e práticos adequados às exigências profissionais até a formação ética e sólida. Fundamentos de arquitetura de software apresenta os principais padrões arquiteturais para projetos de sistemas com diferentes níveis de complexidade, considerando sua evolução durante o seu desenvolvimento. O livro aborda os conceitos fundamentais de desenvolvimento, o paradigma da programação orientada a objetos (POO), princípios do Solid e padrões de design para código-fonte (design patterns). O objetivo é proporcionar ao leitor uma visão geral desses conceitos, práticas e cenários que fazem parte do cotidiano de engenheiros e arquitetos de software.",
+    "qtdPag": 381,
+    "paginasLidas": 23,
+    "pathPDF": "C:\\Users\\mcbil\\Downloads\\Arquitetura Limpa - O Guia do Artesão para Estrutura e Design de Software (Robert C. Martin) (z-lib.org).pdf",
+    "ultimaPagina": 23
+  }
+]

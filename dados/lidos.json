@@ -1,0 +1,29 @@
+[
+  {
+    "nomeDoLivro": "Albert Camus - O estrangeiro",
+    "autor": "LG",
+    "biografia": "O que devemos aprender com O Estrangeiro, o romance emblemático do absurdo? Encontre tudo o que precisa de saber sobre este trabalho numa análise completa e detalhada. Em particular, encontrará neste ficheiro : - Uma sinopse completa - Uma apresentação das personagens principais tais como Meursault, Marie Cardona e Raymond Sintès - Uma análise das especificidades da obra: um romance do absurdo, o tema do sol e uma sátira de comédia social Uma análise de referência para compreender rapidamente o significado da obra.",
+    "qtdPag": 82,
+    "paginasLidas": 0,
+    "pathPDF": "C:\\Users\\mcbil\\Downloads\\Albert Camus - O estrangeiro.pdf",
+    "ultimaPagina": 0
+  },
+  {
+    "nomeDoLivro": "Antoine De Saint-Exupéry - O Pequeno Príncipe",
+    "autor": "Tiemi",
+    "biografia": "Ao ler este resumo, o senhor aprenderá a identificar as qualidades que um verdadeiro amigo possui. O senhor também aprenderá : que um amigo aparece inesperadamente em sua vida; por que é necessário seguir sua intuição quando o senhor conhece alguém novo; como construir um relacionamento gratificante; como detectar e evitar personalidades tóxicas; como tornar-se você mesmo um bom amigo. O Pequeno Príncipe é uma obra de Antoine de Saint-Exupéry, publicada em 1943, quando estava no exílio em Nova Iorque. Esta pequena história usa uma linguagem muito simples, dando-lhe a aparência de um conto infantil. No entanto, sua dimensão poética e filosófica faz parecer que ela se dirige igualmente aos adultos. O tema central da história é a amizade: o que ela significa, como construí-la, o que ela pode trazer de vida. O comportamento das pessoas que o príncipezinho encontra lhe dá, a cada vez, elementos de resposta. Assim, graças a eles, ele percebe a beleza desse laço especial. Como age um verdadeiro amigo?",
+    "qtdPag": 69,
+    "paginasLidas": 25,
+    "pathPDF": "C:\\Users\\mcbil\\Downloads\\O_Pequeno_Príncipe.pdf",
+    "ultimaPagina": 25
+  },
+  {
+    "nomeDoLivro": "Arquitetura Limpa - O Guia do Artesão para Estrutura e Design de Software",
+    "autor": "Robert C. Martin",
+    "biografia": "A Série Universitária foi desenvolvida pelo Senac São Paulo com o intuito de preparar profissionais para o mercado de trabalho. Os títulos abrangem diversas áreas, abordando desde conhecimentos teóricos e práticos adequados às exigências profissionais até a formação ética e sólida. Fundamentos de arquitetura de software apresenta os principais padrões arquiteturais para projetos de sistemas com diferentes níveis de complexidade, considerando sua evolução durante o seu desenvolvimento. O livro aborda os conceitos fundamentais de desenvolvimento, o paradigma da programação orientada a objetos (POO), princípios do Solid e padrões de design para código-fonte (design patterns). O objetivo é proporcionar ao leitor uma visão geral desses conceitos, práticas e cenários que fazem parte do cotidiano de engenheiros e arquitetos de software.",
+    "qtdPag": 381,
+    "paginasLidas": 8,
+    "pathPDF": "C:\\Users\\mcbil\\Downloads\\Arquitetura Limpa - O Guia do Artesão para Estrutura e Design de Software (Robert C. Martin) (z-lib.org).pdf",
+    "ultimaPagina": 8
+  }
+]
