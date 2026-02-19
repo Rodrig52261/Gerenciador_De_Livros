@@ -15,36 +15,30 @@ public class executaPDF extends JFrame {
 
     private PDDocument documento;
     private PDFRenderer renderer;
-    private int paginaAtual = 0;
+    private int paginaEsquerda = 0;
     private int totalPaginas = 0;
     private Cadastro livro;
 
     private JLabel lblPagina;
-    private JLabel lblImagem;
+    private JLabel labelPagEsquerda;
+    private JLabel labelPagDireita;
     private JScrollPane scrollPane;
     private ArrayList<Cadastro> listaParaSalvar;
 
     public executaPDF(Cadastro livro, ArrayList<Cadastro> listaParaSalvar) {
         this.livro = livro;
         this.listaParaSalvar = listaParaSalvar;
-        this.paginaAtual = livro.getUltimaPagina();
 
-        setTitle("Lendo: " + livro.getNomeDoLivro());
-        setSize(900, 800);
+        this.paginaEsquerda = livro.getUltimaPagina();
+        if (paginaEsquerda % 2 != 0 && paginaEsquerda > 0) paginaEsquerda--;
+
+        setTitle("Modo Livro: " + livro.getNomeDoLivro());
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setMinimumSize(new Dimension(1000, 700));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                // Re-renderiza a página para ajustar ao novo tamanho da janela
-                if (documento != null) {
-                    renderizarPagina();
-                }
-            }
-        });
-        setLayout(new BorderLayout());
-        getContentPane().setBackground(new Color(30, 30, 30));
 
-        // Painel de navegação no topo
+        // --- PAINEL DE NAVEGAÇÃO ---
         JPanel painelNav = new JPanel(new FlowLayout());
         painelNav.setBackground(new Color(25, 25, 25));
 
@@ -55,73 +49,100 @@ public class executaPDF extends JFrame {
         estilizarBotao(btnAnterior);
         estilizarBotao(btnProximo);
         lblPagina.setForeground(Color.WHITE);
-        lblPagina.setFont(new Font("Arial", Font.BOLD, 14));
+        lblPagina.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
         painelNav.add(btnAnterior);
         painelNav.add(lblPagina);
         painelNav.add(btnProximo);
 
-        // Área de exibição da página
-        lblImagem = new JLabel();
-        lblImagem.setHorizontalAlignment(JLabel.CENTER);
-        lblImagem.setBackground(new Color(30, 30, 30));
-        lblImagem.setOpaque(true);
+        // --- ÁREA DO LIVRO (PÁGINAS E SOMBRA) ---
+        JPanel painelFolhas = new JPanel(new GridLayout(1, 2, 0, 0)); // 0 de espaço para a sombra se unir
+        painelFolhas.setBackground(new Color(35, 35, 35));
+        painelFolhas.setBorder(new EmptyBorder(20, 40, 20, 40));
 
-        scrollPane = new JScrollPane(lblImagem);
+        // 1. Instanciar primeiro
+        labelPagEsquerda = new JLabel();
+        labelPagEsquerda.setHorizontalAlignment(JLabel.RIGHT);
+
+        labelPagDireita = new JLabel();
+        labelPagDireita.setHorizontalAlignment(JLabel.LEFT);
+
+        // 2. Aplicar bordas (Sombra Central)
+        Color corSombra = new Color(0, 0, 0, 80);
+        labelPagEsquerda.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, corSombra));
+        labelPagDireita.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, corSombra));
+
+        painelFolhas.add(labelPagEsquerda);
+        painelFolhas.add(labelPagDireita);
+
+        scrollPane = new JScrollPane(painelFolhas);
         scrollPane.setBackground(new Color(30, 30, 30));
-        scrollPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Scroll mais suave
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // Remove scroll horizontal se estiver ajustado
-        scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 
         add(painelNav, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Carrega o PDF
         carregarPDF();
 
-        // Ações dos botões
-        btnAnterior.addActionListener(e -> {
-            if (paginaAtual > 0) {
-                paginaAtual--;
-                renderizarPagina();
-            }
+        // Atalhos de Teclado
+        // Atalhos de teclado para passar páginas e scroll
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+            @Override
+            public boolean dispatchKeyEvent(java.awt.event.KeyEvent e) {
+                if (!isShowing()) return false;
 
-            this.addComponentListener(new java.awt.event.ComponentAdapter() {
-                @Override
-                public void componentResized(java.awt.event.ComponentEvent e) {
-                    // Quando você esticar a janela, ele redesenha o PDF para caber na largura
-                    renderizarPagina();
+                if (e.getID() == java.awt.event.KeyEvent.KEY_PRESSED) {
+                    int keyCode = e.getKeyCode();
+                    JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
+
+                    if (keyCode == java.awt.event.KeyEvent.VK_RIGHT) {
+                        avancarPagina();
+                        verticalBar.setValue(0); // Volta o scroll para o topo na nova página
+                    } else if (keyCode == java.awt.event.KeyEvent.VK_LEFT) {
+                        voltarPagina();
+                        verticalBar.setValue(0); // Volta o scroll para o topo na nova página
+                    } else if (keyCode == java.awt.event.KeyEvent.VK_DOWN) {
+                        // Scroll para baixo: valor atual + incremento
+                        verticalBar.setValue(verticalBar.getValue() + 30);
+                    } else if (keyCode == java.awt.event.KeyEvent.VK_UP) {
+                        // Scroll para cima: valor atual - incremento
+                        verticalBar.setValue(verticalBar.getValue() - 30);
+                    }
                 }
-            });
-        });
-
-        btnProximo.addActionListener(e -> {
-            if (paginaAtual < totalPaginas - 1) {
-                paginaAtual++;
-                renderizarPagina();
+                return false;
             }
         });
 
-        // Salva o progresso ao fechar
-        // Salva o progresso ao fechar
+        btnAnterior.addActionListener(e -> voltarPagina());
+        btnProximo.addActionListener(e -> avancarPagina());
+
+        this.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override public void componentResized(java.awt.event.ComponentEvent e) { renderizarPaginas(); }
+        });
+
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
-                // Salva a página onde o usuário parou
-                livro.setUltimaPagina(paginaAtual);
-
-                // Opcional: Se quiser que o progresso apareça como "Página 10"
-                // e não "Página 9" (índice 0), você pode ajustar aqui ou no getter.
-
+                livro.setUltimaPagina(paginaEsquerda);
                 fecharPDF();
-
-                // DICA: Como passamos a 'listaParaSalvar', podemos forçar um salvamento
-                // aqui para garantir que o progresso não se perca se o PC desligar.
                 Salvar.salvarDados(listaParaSalvar, "dados/lendo.json");
             }
         });
+    }
+
+    private void avancarPagina() {
+        if (paginaEsquerda + 2 < totalPaginas) {
+            paginaEsquerda += 2;
+            renderizarPaginas();
+        }
+    }
+
+    private void voltarPagina() {
+        if (paginaEsquerda >= 2) {
+            paginaEsquerda -= 2;
+            renderizarPaginas();
+        }
     }
 
     private void carregarPDF() {
@@ -129,51 +150,45 @@ public class executaPDF extends JFrame {
             documento = Loader.loadPDF(new File(livro.getPathPDF()));
             renderer = new PDFRenderer(documento);
             totalPaginas = documento.getNumberOfPages();
-
-            // Garante que a página inicial é válida
-            if (paginaAtual >= totalPaginas) paginaAtual = 0;
-
-            renderizarPagina();
+            renderizarPaginas();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao abrir o PDF: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro: " + e.getMessage());
         }
     }
 
-    private void renderizarPagina() {
+    private void renderizarPaginas() {
+        if (documento == null) return;
+        int larguraContainer = (scrollPane.getWidth() / 2) - 60;
+        if (larguraContainer < 100) larguraContainer = 500;
+
         try {
-            BufferedImage img = renderer.renderImageWithDPI(paginaAtual, 100); // DPI 100 é mais rápido para redimensionar
+            labelPagEsquerda.setIcon(new ImageIcon(gerarImagemPagina(paginaEsquerda, larguraContainer)));
+            if (paginaEsquerda + 1 < totalPaginas) {
+                labelPagDireita.setIcon(new ImageIcon(gerarImagemPagina(paginaEsquerda + 1, larguraContainer)));
+                labelPagDireita.setVisible(true);
+                lblPagina.setText("Páginas " + (paginaEsquerda + 1) + "-" + (paginaEsquerda + 2) + " de " + totalPaginas);
+            } else {
+                labelPagDireita.setVisible(false);
+                lblPagina.setText("Página " + (paginaEsquerda + 1) + " de " + totalPaginas);
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+    }
 
-            // Calcula a largura disponível no ScrollPane
-            int larguraDisponivel = scrollPane.getWidth() - 40;
-            if (larguraDisponivel < 100) larguraDisponivel = 800;
-
-            // Redimensiona mantendo a proporção
-            double ratio = (double) larguraDisponivel / img.getWidth();
-            int novaAltura = (int) (img.getHeight() * ratio);
-
-            Image imgAjustada = img.getScaledInstance(larguraDisponivel, novaAltura, Image.SCALE_SMOOTH);
-            lblImagem.setIcon(new ImageIcon(imgAjustada));
-
-            // Atualiza o texto de progresso
-            lblPagina.setText("Página " + (paginaAtual + 1) + " de " + totalPaginas);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private Image gerarImagemPagina(int index, int larguraAlvo) throws IOException {
+        BufferedImage img = renderer.renderImageWithDPI(index, 100);
+        double ratio = (double) larguraAlvo / img.getWidth();
+        int novaAltura = (int) (img.getHeight() * ratio);
+        return img.getScaledInstance(larguraAlvo, novaAltura, Image.SCALE_SMOOTH);
     }
 
     private void fecharPDF() {
-        try {
-            if (documento != null) documento.close();
-        } catch (IOException e) {
-            System.out.println("Erro ao fechar PDF: " + e.getMessage());
-        }
+        try { if (documento != null) documento.close(); } catch (IOException e) {}
     }
 
-    private void estilizarBotao(JButton botao) {
-        botao.setBackground(new Color(60, 60, 60));
-        botao.setForeground(Color.WHITE);
-        botao.setFocusPainted(false);
-        botao.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    private void estilizarBotao(JButton b) {
+        b.setBackground(new Color(60, 60, 60));
+        b.setForeground(Color.WHITE);
+        b.setFocusPainted(false);
+        b.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 }

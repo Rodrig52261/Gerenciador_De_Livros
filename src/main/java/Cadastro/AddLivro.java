@@ -1,199 +1,262 @@
 package Cadastro;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDDocumentInformation;
-import org.apache.pdfbox.Loader;
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class AddLivro extends JDialog {
+public class AddLivro extends JFrame {
 
-    private JTextField txtNome, txtAutor, txtPaginas;
-    private JTextArea txtBio;
-    private JComboBox<String> comboCategoria;
-    private String pathPDF = "";
-    private Map<String, DefaultListModel<Cadastro>> modelos;
-    private final Color COR_INPUT = new Color(45, 45, 48);
-    private final Color COR_DESTAQUE = new Color(0, 120, 215);
+    private JTextField txtTitulo, txtAutor, txtPaginas;
+    private JTextArea txtSinopse;
+    private JComboBox<String> comboStatus; // Nova caixa de seleção
+    private JLabel lblCapa;
+    private String pathCapaTemporaria = "";
+    private String pathPDFOrigem = "";
+    private Tela telaPrincipal;
 
-    public AddLivro(JFrame parent, Map<String, DefaultListModel<Cadastro>> modelos) {
-        super(parent, "Adicionar à Biblioteca", true);
-        this.modelos = modelos;
+    public AddLivro(Tela telaPrincipal, Map<String, DefaultListModel<Cadastro>> modelosMap) {
+        this.telaPrincipal = telaPrincipal;
+        configurarJanela();
 
-        setSize(500, 750);
-        setLocationRelativeTo(parent);
-        getContentPane().setBackground(new Color(30, 30, 30));
-        setLayout(new BorderLayout());
+        // Painel da capa
+        JPanel painelCapa = new JPanel(new BorderLayout());
+        painelCapa.setBackground(new Color(30, 30, 30));
+        painelCapa.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        painelCapa.setPreferredSize(new Dimension(200, 0));
 
-        // --- CABEÇALHO ---
-        JPanel header = new JPanel(new BorderLayout());
-        header.setBackground(new Color(37, 37, 38));
-        header.setBorder(new EmptyBorder(20, 25, 20, 25));
+        lblCapa = new JLabel("Buscando capa...", SwingConstants.CENTER);
+        lblCapa.setForeground(Color.GRAY);
+        lblCapa.setBackground(new Color(45, 45, 45));
+        lblCapa.setOpaque(true);
+        lblCapa.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+        painelCapa.add(lblCapa, BorderLayout.CENTER);
 
-        JLabel lblTitulo = new JLabel("Novo Cadastro");
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        lblTitulo.setForeground(Color.WHITE);
+        // Painel Formulário
+        JPanel painelDireita = new JPanel(new BorderLayout());
+        painelDireita.setBackground(new Color(30, 30, 30));
 
-        JButton btnPDF = new JButton("Importar PDF 📄");
-        estilizarBotao(btnPDF, COR_DESTAQUE);
-        btnPDF.addActionListener(e -> selecionarEProcessarPDF());
+        JPanel painelCampos = new JPanel(new GridBagLayout());
+        painelCampos.setBackground(new Color(30, 30, 30));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 10, 5, 10);
 
-        header.add(lblTitulo, BorderLayout.WEST);
-        header.add(btnPDF, BorderLayout.EAST);
+        txtTitulo = criarCampo();
+        txtAutor = criarCampo();
+        txtPaginas = criarCampo();
 
-        // --- CORPO (FORMULÁRIO) ---
-        JPanel corpo = new JPanel();
-        corpo.setLayout(new BoxLayout(corpo, BoxLayout.Y_AXIS));
-        corpo.setBackground(new Color(30, 30, 30));
-        corpo.setBorder(new EmptyBorder(10, 25, 20, 25));
+        // Configurando a seleção de Status
+        String[] statusOpcoes = {"Lendo", "Quero Ler", "Lido"};
+        comboStatus = new JComboBox<>(statusOpcoes);
+        comboStatus.setBackground(new Color(50, 50, 50));
+        comboStatus.setForeground(Color.WHITE);
+        ((JLabel)comboStatus.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
 
-        txtNome = criarCampoModerno(corpo, "Título do Livro");
-        txtAutor = criarCampoModerno(corpo, "Autor");
-        txtPaginas = criarCampoModerno(corpo, "Total de Páginas");
+        adicionarComponente(painelCampos, gbc, "Título:", txtTitulo, 0);
+        adicionarComponente(painelCampos, gbc, "Autor:", txtAutor, 1);
+        adicionarComponente(painelCampos, gbc, "Páginas:", txtPaginas, 2);
+        adicionarComponente(painelCampos, gbc, "Status:", comboStatus, 3);
 
-        corpo.add(criarLabel("Mover para:"));
-        comboCategoria = new JComboBox<>(new String[]{"Lendo", "Quero Ler", "Lidos"});
-        comboCategoria.setBackground(COR_INPUT);
-        comboCategoria.setForeground(Color.WHITE);
-        comboCategoria.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        comboCategoria.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        comboCategoria.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 60), 1));
-        corpo.add(comboCategoria);
-        corpo.add(Box.createRigidArea(new Dimension(0, 15)));
+        JButton btnRefinar = new JButton("Não é este? Buscar outras opções 🔍");
+        btnRefinar.setBackground(new Color(40, 40, 40));
+        btnRefinar.setForeground(Color.CYAN);
+        gbc.gridy = 4; gbc.gridx = 1;
+        painelCampos.add(btnRefinar, gbc);
 
-        corpo.add(criarLabel("Sinopse / Biografia"));
-        txtBio = new JTextArea(6, 20);
-        txtBio.setLineWrap(true);
-        txtBio.setWrapStyleWord(true);
-        txtBio.setBackground(COR_INPUT);
-        txtBio.setForeground(new Color(200, 200, 200));
-        txtBio.setCaretColor(Color.WHITE);
-        txtBio.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        corpo.add(new JScrollPane(txtBio));
+        txtSinopse = new JTextArea(15, 20);
+        txtSinopse.setLineWrap(true);
+        txtSinopse.setWrapStyleWord(true);
+        txtSinopse.setBackground(new Color(45, 45, 45));
+        txtSinopse.setForeground(Color.WHITE);
+        txtSinopse.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JScrollPane scroll = new JScrollPane(txtSinopse);
+        scroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), "Sinopse", 0, 0, null, Color.WHITE));
 
-        // --- RODAPÉ ---
-        JButton btnSalvar = new JButton("Confirmar e Salvar");
-        estilizarBotao(btnSalvar, new Color(38, 162, 105));
+        painelDireita.add(painelCampos, BorderLayout.NORTH);
+        painelDireita.add(scroll, BorderLayout.CENTER);
+
+        JButton btnSalvar = new JButton("CONFIRMAR E SALVAR ✅");
         btnSalvar.setPreferredSize(new Dimension(0, 60));
-        btnSalvar.addActionListener(e -> executarSalvamento());
+        btnSalvar.setBackground(new Color(46, 204, 113));
+        btnSalvar.setForeground(Color.WHITE);
+        btnSalvar.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
-        add(header, BorderLayout.NORTH);
-        add(new JScrollPane(corpo), BorderLayout.CENTER);
+        add(painelCapa, BorderLayout.WEST);
+        add(painelDireita, BorderLayout.CENTER);
         add(btnSalvar, BorderLayout.SOUTH);
+
+        btnRefinar.addActionListener(e -> {
+            SearchBooks buscador = new SearchBooks(this);
+            buscador.setVisible(true);
+        });
+
+        btnSalvar.addActionListener(e -> salvarLivro());
+
+        selecionarPDF();
     }
 
-    private JTextField criarCampoModerno(JPanel p, String label) {
-        p.add(criarLabel(label));
-        JTextField t = new JTextField();
-        t.setBackground(COR_INPUT);
-        t.setForeground(Color.WHITE);
-        t.setCaretColor(Color.WHITE);
-        t.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        t.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(60, 60, 60), 1),
-                BorderFactory.createEmptyBorder(8, 10, 8, 10)
-        ));
-        t.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
-        p.add(t);
-        p.add(Box.createRigidArea(new Dimension(0, 15)));
-        return t;
+    public void preencherCamposManualmente(Cadastro selecionado) {
+        txtTitulo.setText(selecionado.getNomeDoLivro());
+        txtAutor.setText(selecionado.getAutor());
+        txtSinopse.setText(selecionado.getBiografia());
+        txtPaginas.setText(String.valueOf(selecionado.getQtdPag()));
+        this.pathCapaTemporaria = selecionado.getPathCapa();
+        carregarCapa(pathCapaTemporaria); // Chama sua função de carregar imagem
     }
 
-    private JLabel criarLabel(String texto) {
-        JLabel l = new JLabel(texto);
-        l.setForeground(new Color(180, 180, 180));
-        l.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        l.setBorder(new EmptyBorder(0, 0, 5, 0));
-        return l;
-    }
+    private void salvarLivro() {
+        Cadastro c = new Cadastro();
+        c.setNomeDoLivro(txtTitulo.getText());
+        c.setAutor(txtAutor.getText());
+        c.setBiografia(txtSinopse.getText());
+        c.setPathCapa(pathCapaTemporaria);
+        c.setPathPDF(pathPDFOrigem);
 
-    private void estilizarBotao(JButton b, Color cor) {
-        b.setBackground(cor);
-        b.setForeground(Color.WHITE);
-        b.setFocusPainted(false);
-        b.setBorderPainted(false);
-        b.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        b.setCursor(new Cursor(Cursor.HAND_CURSOR));
-    }
-
-    private void selecionarEProcessarPDF() {
-        JFileChooser chooser = new JFileChooser();
-        chooser.setFileFilter(new FileNameExtensionFilter("PDF Files", "pdf"));
-        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            File arquivo = chooser.getSelectedFile();
-            this.pathPDF = arquivo.getAbsolutePath();
-            try (PDDocument doc = Loader.loadPDF(arquivo)) {
-                PDDocumentInformation info = doc.getDocumentInformation();
-                String titulo = (info.getTitle() != null && !info.getTitle().isEmpty())
-                        ? info.getTitle() : arquivo.getName().replace(".pdf", "");
-
-                txtNome.setText(titulo);
-                txtAutor.setText(info.getAuthor() != null ? info.getAuthor() : "");
-                txtPaginas.setText(String.valueOf(doc.getNumberOfPages()));
-
-                new Thread(() -> {
-                    String[] infoExtra = LivroService.buscarInfoExtra(titulo);
-                    SwingUtilities.invokeLater(() -> txtBio.setText(infoExtra[0]));
-                }).start();
-            } catch (Exception e) { e.printStackTrace(); }
-        }
-    }
-
-    private void executarSalvamento() {
-        String selecionado = comboCategoria.getSelectedItem().toString();
-
-        // 1. Gera o ID da categoria (ex: "Quero Ler" -> "queroler")
-        String catId = selecionado.toLowerCase().replace(" ", "");
-
-        // 2. Normalização: O seu sistema usa "querolar" no modelosMap e no JSON
-        if (catId.equals("queroler")) {
-            catId = "querolar";
+        try {
+            c.setQtdPag(Integer.parseInt(txtPaginas.getText()));
+        } catch(Exception ex) {
+            c.setQtdPag(0);
         }
 
-        // 3. Busca o modelo correto
-        DefaultListModel<Cadastro> modeloAlvo = modelos.get(catId);
+        // Pega o status selecionado no ComboBox
+        String status = (String) comboStatus.getSelectedItem();
 
-        // DEBUG no console para te ajudar se falhar
-        if (modeloAlvo == null) {
-            System.out.println("ERRO: Tentou buscar '" + catId + "' mas no mapa só tem: " + modelos.keySet());
-        }
-
-        if (modeloAlvo != null && !txtNome.getText().trim().isEmpty()) {
-            try {
-                Cadastro n = new Cadastro();
-                n.setNomeDoLivro(txtNome.getText().trim());
-                n.setAutor(txtAutor.getText().trim());
-
-                String paginasTexto = txtPaginas.getText().replaceAll("\\D", "");
-                n.setQtdPag(paginasTexto.isEmpty() ? 0 : Integer.parseInt(paginasTexto));
-
-                n.setBiografia(txtBio.getText());
-                n.setPathPDF(pathPDF);
-                n.setUltimaPagina(0);
-
-                // Adiciona na interface
-                modeloAlvo.addElement(n);
-
-                // Salva no JSON
-                String caminhoArquivo = "dados/" + catId + ".json";
-                ArrayList<Cadastro> listaAtual = Salvar.carregarDados(caminhoArquivo);
-                listaAtual.add(n);
-                Salvar.salvarDados(listaAtual, caminhoArquivo);
-
-                JOptionPane.showMessageDialog(this, "Livro salvo em: " + selecionado);
-                dispose();
-
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Erro ao salvar: " + e.getMessage());
-                e.printStackTrace();
-            }
+        if ("Lendo".equals(status)) {
+            telaPrincipal.getLivrosLendo().add(c);
+        } else if ("Quero Ler".equals(status)) {
+            telaPrincipal.getLivrosQueroLer().add(c); // Agora ele vai cair no livrosParaLer corretamente
         } else {
-            JOptionPane.showMessageDialog(this, "Erro: Categoria '" + catId + "' não encontrada ou título vazio.");
+            telaPrincipal.getLivrosLidos().add(c);
         }
+
+        telaPrincipal.salvarEAtualizarTudo();
+        dispose();
+    }
+
+    // --- MÉTODOS DE BUSCA E EXTRAÇÃO (IGUAIS AOS ANTERIORES PORÉM REVISADOS) ---
+
+    private void realizarBusca(String termo) {
+        new Thread(() -> {
+            try {
+                String termoLimpo = termo.replaceAll("\\(.*?\\)", "").replace("_", " ").trim();
+                String q = URLEncoder.encode(termoLimpo, "UTF-8");
+                URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=" + q + "&maxResults=5&langRestrict=pt");
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                StringBuilder sb = new StringBuilder(); String linha;
+                while ((linha = rd.readLine()) != null) sb.append(linha);
+
+                ArrayList<Cadastro> resultados = processarVarios(sb.toString());
+
+                SwingUtilities.invokeLater(() -> {
+                    if (!resultados.isEmpty()) {
+                        Cadastro melhor = resultados.get(0);
+                        txtTitulo.setText(melhor.getNomeDoLivro());
+                        txtAutor.setText(melhor.getAutor());
+                        txtSinopse.setText(melhor.getBiografia());
+                        pathCapaTemporaria = melhor.getPathCapa();
+                        carregarCapa(pathCapaTemporaria);
+                    }
+                });
+            } catch (Exception e) { e.printStackTrace(); }
+        }).start();
+    }
+
+    private ArrayList<Cadastro> processarVarios(String json) {
+        ArrayList<Cadastro> lista = new ArrayList<>();
+        try {
+            int pos = 0;
+            while ((pos = json.indexOf("\"volumeInfo\":", pos)) != -1 && lista.size() < 5) {
+                int fimItem = json.indexOf("\"saleInfo\"", pos);
+                if (fimItem == -1) fimItem = Math.min(pos + 3500, json.length());
+                String trecho = json.substring(pos, fimItem);
+
+                Cadastro c = new Cadastro();
+                c.setNomeDoLivro(extrairValor(trecho, "\"title\": \""));
+                c.setAutor(extrairValor(trecho, "\"authors\": [ \"", "\"authors\": [\n          \""));
+                c.setBiografia(extrairValor(trecho, "\"description\": \""));
+                c.setPathCapa(extrairValor(trecho, "\"thumbnail\": \"").replace("http:", "https:"));
+
+                try {
+                    int pIdx = trecho.indexOf("\"pageCount\":");
+                    if (pIdx != -1) {
+                        String num = trecho.substring(pIdx + 12).split("[,}]")[0].trim();
+                        c.setQtdPag(Integer.parseInt(num));
+                    }
+                } catch (Exception e) {}
+
+                if (!c.getNomeDoLivro().isEmpty()) lista.add(c);
+                pos += 20;
+            }
+        } catch (Exception e) {}
+        return lista;
+    }
+
+    private String extrairValor(String trecho, String... chaves) {
+        for (String chave : chaves) {
+            if (trecho.contains(chave)) {
+                int start = trecho.indexOf(chave) + chave.length();
+                int end = trecho.indexOf("\"", start);
+                return trecho.substring(start, end).replace("\\n", "\n").replace("\\\"", "\"");
+            }
+        }
+        return "";
+    }
+
+    private void carregarCapa(String urlOuPath) {
+        if (urlOuPath.isEmpty()) return;
+        new Thread(() -> {
+            try {
+                Image img = ImageIO.read(new URL(urlOuPath));
+                Image scaled = img.getScaledInstance(180, 260, Image.SCALE_SMOOTH);
+                SwingUtilities.invokeLater(() -> {
+                    lblCapa.setIcon(new ImageIcon(scaled));
+                    lblCapa.setText("");
+                });
+            } catch (Exception e) {
+                SwingUtilities.invokeLater(() -> lblCapa.setText("Sem Capa"));
+            }
+        }).start();
+    }
+
+    private void selecionarPDF() {
+        JFileChooser fc = new JFileChooser();
+        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            pathPDFOrigem = fc.getSelectedFile().getAbsolutePath();
+            try (org.apache.pdfbox.pdmodel.PDDocument doc = org.apache.pdfbox.Loader.loadPDF(fc.getSelectedFile())) {
+                org.apache.pdfbox.pdmodel.PDDocumentInformation info = doc.getDocumentInformation();
+                String t = (info.getTitle() != null && !info.getTitle().isEmpty()) ? info.getTitle() : fc.getSelectedFile().getName().replace(".pdf", "");
+                String a = (info.getAuthor() != null) ? info.getAuthor() : "";
+
+                txtTitulo.setText(t);
+                txtAutor.setText(a);
+                txtPaginas.setText(String.valueOf(doc.getNumberOfPages()));
+                realizarBusca(t);
+            } catch (Exception e) { realizarBusca(fc.getSelectedFile().getName().replace(".pdf", "")); }
+        } else { dispose(); }
+    }
+
+    private void configurarJanela() {
+        setSize(750, 750); setLocationRelativeTo(null);
+        getContentPane().setBackground(new Color(30, 30, 30)); setLayout(new BorderLayout());
+    }
+
+    private JTextField criarCampo() {
+        JTextField f = new JTextField(); f.setBackground(new Color(50, 50, 50));
+        f.setForeground(Color.WHITE); f.setCaretColor(Color.WHITE);
+        f.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8)); return f;
+    }
+
+    private void adicionarComponente(JPanel p, GridBagConstraints gbc, String l, Component c, int y) {
+        gbc.gridy = y; gbc.gridx = 0; p.add(new JLabel("<html><font color='white'>"+l+"</font></html>"), gbc);
+        gbc.gridx = 1; p.add(c, gbc);
     }
 }

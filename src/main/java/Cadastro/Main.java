@@ -1,18 +1,12 @@
 package Cadastro;
 
 import com.formdev.flatlaf.FlatDarkLaf;
-
 import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        // Seu código para iniciar a tela
-        java.awt.EventQueue.invokeLater(() -> {
-            new Tela().setVisible(true);
-        });
-
         try {
-            // 1. Configurações de arredondamento globais
+            // 1. Configurações de arredondamento globais (Devem vir ANTES do setup)
             UIManager.put("Button.arc", 15);
             UIManager.put("Component.arc", 15);
             UIManager.put("TextComponent.arc", 15);
@@ -24,12 +18,13 @@ public class Main {
             UIManager.put("ScrollBar.width", 6);
 
             // 3. Aplica o Tema Dark
-            com.formdev.flatlaf.FlatDarkLaf.setup();
+            FlatDarkLaf.setup();
 
-            // Inicia a aplicação
+            // 4. Inicia a aplicação
             SwingUtilities.invokeLater(() -> {
                 new Tela().setVisible(true);
             });
+
         } catch (Exception e) {
             e.printStackTrace();
         }

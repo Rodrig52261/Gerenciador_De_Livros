@@ -14,6 +14,7 @@ public class Cadastro {
     private int paginasLidas; // Você pode usar isso como o progresso total
     private String pathPDF;
     private int ultimaPagina; // Onde o marcador de página realmente fica
+    private String pathCapa;
 
     // --- GETTERS ---
     public String getNomeDoLivro() { return nomeDoLivro; }
@@ -98,5 +99,13 @@ public class Cadastro {
 
     public void setBiografia(String biografia) {
         this.biografia = biografia;
+    }
+
+    public void setPathCapa(String pathCapa) {
+        this.pathCapa = pathCapa;
+    }
+
+    public String getPathCapa() {
+        return pathCapa;
     }
 }

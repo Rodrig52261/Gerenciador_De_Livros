@@ -1,341 +1,333 @@
 package Cadastro;
 
+import org.apiguardian.api.API;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 public class Tela extends JFrame {
 
+    // Cores e Estilo
     private final Color COR_FUNDO = new Color(30, 30, 30);
     private final Color COR_PAINEL = new Color(45, 45, 45);
     private final Color COR_MENU = new Color(25, 25, 25);
     private final Color COR_TEXTO = new Color(220, 220, 220);
     private final Color COR_DESTAQUE = new Color(88, 166, 255);
-    private final Color COR_BOTAO = new Color(60, 60, 60);
 
-    private JPanel painelConteudo;
+    // Componentes Globais
+    private JPanel painelCartoes;
     private CardLayout cardLayout;
+    private String categoriaAtiva = "lendo";
     private Map<String, DefaultListModel<Cadastro>> modelosMap = new HashMap<>();
     private Cadastro livroSelecionadoAtual;
 
-    private JLabel lblTituloInfo;
+    // Componentes de Detalhes
+    private JLabel lblTituloInfo, lblAutorDestaque, lblCapa;
     private JProgressBar barraProgresso;
+    private JTextArea txtSinopseModern;
+    private JButton btnAbrir, btnConcluir, btnDelete;
 
     private ArrayList<Cadastro> livrosLidos, livrosLendo, livrosParaLer;
     private final String PASTA_DADOS = "dados/";
+    private DefaultListModel<Cadastro> livrosQueroLer = new DefaultListModel<>();
+
+    // Getters para permitir que o AddLivro adicione livros nas listas
+    public ArrayList<Cadastro> getLivrosLendo() { return livrosLendo; }
+    public ArrayList<Cadastro> getLivrosLidos() { return livrosLidos; }
+    public ArrayList<Cadastro> getLivrosQueroLer() { return livrosParaLer; }
 
     public Tela() {
         setTitle("Gerenciador de Leitura Pessoal");
-        setSize(1000, 700);
+        setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        configurarComponentesGlobais();
         inicializarDados();
+        configurarComponentesDestaque();
 
+        // Menu Lateral
         add(criarMenuLateral(), BorderLayout.WEST);
 
+        // Painel Central: Lista + Detalhes
+        JPanel painelCentral = new JPanel(new BorderLayout());
+
         cardLayout = new CardLayout();
-        painelConteudo = new JPanel(cardLayout);
+        painelCartoes = new JPanel(cardLayout);
+        painelCartoes.setPreferredSize(new Dimension(320, 0));
 
-        painelConteudo.add(criarPainelCategoria("Lidos", livrosLidos), "lidos");
-        painelConteudo.add(criarPainelCategoria("Lendo", livrosLendo), "lendo");
-        painelConteudo.add(criarPainelCategoria("Quero Ler", livrosParaLer), "querolar");
+        painelCartoes.add(criarPainelLista(livrosLendo, "lendo"), "lendo");
+        painelCartoes.add(criarPainelLista(livrosParaLer, "querolar"), "querolar");
+        painelCartoes.add(criarPainelLista(livrosLidos, "lidos"), "lidos");
 
-        add(painelConteudo, BorderLayout.CENTER);
-        cardLayout.show(painelConteudo, "lendo");
+        painelCentral.add(painelCartoes, BorderLayout.WEST);
+        painelCentral.add(montarPainelDetalhesFixo(), BorderLayout.CENTER);
+
+        add(painelCentral, BorderLayout.CENTER);
+        cardLayout.show(painelCartoes, "lendo");
     }
 
-    private void configurarComponentesGlobais() {
+    private void configurarComponentesDestaque() {
         lblTituloInfo = new JLabel("Selecione um livro");
-        lblTituloInfo.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblTituloInfo.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTituloInfo.setForeground(COR_DESTAQUE);
-        lblTituloInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblTituloInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        lblAutorDestaque = new JLabel(" ");
+        lblAutorDestaque.setFont(new Font("Segoe UI", Font.ITALIC, 18));
+        lblAutorDestaque.setForeground(Color.GRAY);
+        lblAutorDestaque.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        lblCapa = new JLabel("Sem Capa");
+        lblCapa.setPreferredSize(new Dimension(220, 310));
+        lblCapa.setMaximumSize(new Dimension(220, 310));
+        lblCapa.setBackground(new Color(40, 40, 40));
+        lblCapa.setOpaque(true);
+        lblCapa.setHorizontalAlignment(SwingConstants.CENTER);
+        lblCapa.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 60)));
+        lblCapa.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        txtSinopseModern = new JTextArea();
+        txtSinopseModern.setLineWrap(true);
+        txtSinopseModern.setWrapStyleWord(true);
+        txtSinopseModern.setEditable(false);
+        txtSinopseModern.setBackground(COR_PAINEL);
+        txtSinopseModern.setForeground(COR_TEXTO);
+        txtSinopseModern.setFont(new Font("Segoe UI", Font.PLAIN, 15));
 
         barraProgresso = new JProgressBar(0, 100);
+        barraProgresso.setMaximumSize(new Dimension(400, 25));
         barraProgresso.setForeground(COR_DESTAQUE);
-        barraProgresso.setBackground(COR_BOTAO);
-        barraProgresso.setStringPainted(true);
+        barraProgresso.setAlignmentX(Component.CENTER_ALIGNMENT);
         barraProgresso.setVisible(false);
-        barraProgresso.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
+
+        // Botões
+        btnAbrir = criarBotaoEstilizado("Abrir Livro 📖", COR_DESTAQUE);
+        btnConcluir = criarBotaoEstilizado("Concluir ✓", new Color(46, 204, 113));
+        btnDelete = criarBotaoEstilizado("Excluir 🗑", new Color(231, 76, 60));
+
+        // Ações
+        btnAbrir.addActionListener(e -> {
+            if (livroSelecionadoAtual != null) {
+                if (categoriaAtiva.equals("querolar")) moverParaLendo(livroSelecionadoAtual);
+                abrirPDF();
+            }
+        });
+        btnConcluir.addActionListener(e -> concluirLivro());
+        btnDelete.addActionListener(e -> excluirLivro());
     }
 
-    private void inicializarDados() {
-        File pasta = new File(PASTA_DADOS);
-        if (!pasta.exists()) pasta.mkdirs();
-        this.livrosLidos = Salvar.carregarDados(PASTA_DADOS + "lidos.json");
-        this.livrosLendo = Salvar.carregarDados(PASTA_DADOS + "lendo.json");
-        this.livrosParaLer = Salvar.carregarDados(PASTA_DADOS + "querolar.json");
+    // Na classe Tela.java
+    public void salvarEAtualizarTudo() {
+        // 1. Salva os arquivos JSON usando a sua classe Salvar
+        Salvar.salvarDados(livrosLendo, PASTA_DADOS + "lendo.json");
+        Salvar.salvarDados(livrosParaLer, PASTA_DADOS + "querolar.json");
+        Salvar.salvarDados(livrosLidos, PASTA_DADOS + "lidos.json");
+
+        // 2. Atualiza os modelos visuais (o que aparece nas listas da tela)
+        atualizarModelo(modelosMap.get("lendo"), livrosLendo);
+        atualizarModelo(modelosMap.get("querolar"), livrosParaLer);
+        atualizarModelo(modelosMap.get("lidos"), livrosLidos);
+
+        // 3. Força a interface a se redesenhar
+        repaint();
+        revalidate();
     }
 
-    private JPanel criarPainelCategoria(String nomeExibicao, ArrayList<Cadastro> lista) {
-        String idAba = nomeExibicao.toLowerCase().replace(" ", "");
-        String idFixoDestaAba = idAba;
-        if (idAba.equals("queroler")) idAba = "querolar";
+    private void atualizarModelo(DefaultListModel<Cadastro> modelo, ArrayList<Cadastro> lista) {
+        if (modelo != null && lista != null) {
+            modelo.clear();
+            for (Cadastro c : lista) {
+                modelo.addElement(c);
+            }
+        }
+    }
 
-        JPanel painelPrincipal = new JPanel(new BorderLayout());
-        painelPrincipal.setBackground(COR_FUNDO);
+    public ImageIcon redimensionarIcone(String path, int w, int h) {
+        try {
+            Image img = null;
+            if (path != null && path.startsWith("http")) {
+                java.net.URL url = new java.net.URL(path);
+                java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+                img = javax.imageio.ImageIO.read(conn.getInputStream());
+            } else if (path != null && !path.isEmpty()) {
+                img = new ImageIcon(path).getImage();
+            }
+            if (img == null) return null;
+            return new ImageIcon(img.getScaledInstance(w, h, Image.SCALE_SMOOTH));
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
-        DefaultListModel<Cadastro> modeloLista = new DefaultListModel<>();
-        lista.forEach(modeloLista::addElement);
-        modelosMap.put(idAba, modeloLista);
+    private JScrollPane criarPainelLista(ArrayList<Cadastro> lista, String id) {
+        DefaultListModel<Cadastro> modelo = new DefaultListModel<>();
+        lista.forEach(modelo::addElement);
+        modelosMap.put(id, modelo);
 
-        JList<Cadastro> listaLivros = new JList<>(modeloLista);
-        listaLivros.setBackground(COR_PAINEL);
-        listaLivros.setForeground(COR_TEXTO);
-        listaLivros.setFixedCellHeight(45);
-        listaLivros.setBorder(new EmptyBorder(5, 5, 5, 5));
-        listaLivros.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        listaLivros.setSelectionBackground(COR_DESTAQUE);
+        JList<Cadastro> jlist = new JList<>(modelo);
+        jlist.setBackground(COR_PAINEL);
+        jlist.setForeground(COR_TEXTO);
+        jlist.setFixedCellHeight(55);
+        jlist.setSelectionBackground(COR_DESTAQUE);
 
-        JScrollPane scrollLista = new JScrollPane(listaLivros);
-        scrollLista.setPreferredSize(new Dimension(300, 0));
-        scrollLista.setBorder(BorderFactory.createEmptyBorder());
-        scrollLista.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollLista.getVerticalScrollBar().setPreferredSize(new Dimension(6, 0));
-
-        JPanel painelDetalhes = new JPanel();
-        painelDetalhes.setLayout(new BoxLayout(painelDetalhes, BoxLayout.Y_AXIS));
-        painelDetalhes.setBackground(COR_FUNDO);
-        painelDetalhes.setBorder(new EmptyBorder(30, 30, 30, 30));
-
-        JTextArea txtInfo = new JTextArea();
-        txtInfo.setEditable(false);
-        txtInfo.setLineWrap(true);
-        txtInfo.setWrapStyleWord(true);
-        txtInfo.setBackground(COR_FUNDO);
-        txtInfo.setForeground(COR_TEXTO);
-        txtInfo.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-
-        JScrollPane scrollTxt = new JScrollPane(txtInfo);
-        scrollTxt.setBorder(null);
-        scrollTxt.setOpaque(false);
-        scrollTxt.getViewport().setOpaque(false);
-
-        JButton btnAbrir = criarBotaoAcao("Abrir Livro 📖", COR_DESTAQUE);
-        JButton btnConcluir = criarBotaoAcao("Marcar como Lido ✓", new Color(40, 167, 69));
-        JButton btnDelete = criarBotaoAcao("Excluir 🗑", new Color(180, 50, 50));
-
-        btnAbrir.setVisible(false); btnConcluir.setVisible(false); btnDelete.setVisible(false);
-
-        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
-        painelBotoes.setOpaque(false);
-        painelBotoes.add(btnAbrir); painelBotoes.add(btnConcluir); painelBotoes.add(btnDelete);
-
-        painelDetalhes.add(lblTituloInfo);
-        painelDetalhes.add(Box.createRigidArea(new Dimension(0, 20)));
-        painelDetalhes.add(barraProgresso);
-        painelDetalhes.add(Box.createRigidArea(new Dimension(0, 20)));
-        painelDetalhes.add(scrollTxt);
-        painelDetalhes.add(Box.createRigidArea(new Dimension(0, 20)));
-        painelDetalhes.add(painelBotoes);
-
-        String finalIdAba = idAba;
-        listaLivros.addListSelectionListener(e -> {
+        jlist.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
-                Cadastro sel = listaLivros.getSelectedValue();
-                if (sel != null) {
-                    this.livroSelecionadoAtual = sel;
-
-                    // Verificação direta: Se o título do painel for "Quero Ler", esconde a barra
-                    if (nomeExibicao.equalsIgnoreCase("Quero Ler")) {
-                        barraProgresso.setVisible(false);
-                    } else {
-                        barraProgresso.setValue(sel.calcularPorcentagem());
-                        barraProgresso.setVisible(true);
-                    }
-
-                    renderizarDetalhes(txtInfo, nomeExibicao); // Passamos o nome fixo
-
-                    btnAbrir.setVisible(true);
-                    btnConcluir.setVisible(!nomeExibicao.equals("Lidos"));
-                    btnDelete.setVisible(true);
-                }
+                livroSelecionadoAtual = jlist.getSelectedValue();
+                if (livroSelecionadoAtual != null) renderizarInterface();
             }
         });
 
-        btnAbrir.addActionListener(ev -> {
-            if (livroSelecionadoAtual == null) return;
-            if (nomeExibicao.contains("Quero")) moverParaLendo(livroSelecionadoAtual);
-            abrirVisualizadorPDF(livroSelecionadoAtual, txtInfo, finalIdAba);
-        });
-
-        btnConcluir.addActionListener(ev -> executarConclusao(finalIdAba, txtInfo, btnAbrir, btnConcluir, btnDelete));
-
-        btnDelete.addActionListener(ev -> {
-            if (JOptionPane.showConfirmDialog(this, "Excluir livro?") == JOptionPane.YES_OPTION) {
-                lista.remove(livroSelecionadoAtual);
-                modeloLista.removeElement(livroSelecionadoAtual);
-                Salvar.salvarDados(lista, PASTA_DADOS + finalIdAba + ".json");
-                limparDetalhesGerais(txtInfo, btnAbrir, btnConcluir, btnDelete);
-            }
-        });
-
-        painelPrincipal.add(scrollLista, BorderLayout.WEST);
-        painelPrincipal.add(painelDetalhes, BorderLayout.CENTER);
-
-        return painelPrincipal;
+        JScrollPane sp = new JScrollPane(jlist);
+        sp.setBorder(null);
+        return sp;
     }
 
-    private JPanel criarMenuLateral() {
-        JPanel menu = new JPanel();
-        menu.setLayout(new BoxLayout(menu, BoxLayout.Y_AXIS));
-        menu.setBackground(COR_MENU);
-        menu.setPreferredSize(new Dimension(230, 0));
-        menu.setBorder(new EmptyBorder(30, 15, 30, 15));
+    private JPanel montarPainelDetalhesFixo() {
+        JPanel p = new JPanel();
+        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+        p.setBackground(COR_FUNDO);
+        p.setBorder(new EmptyBorder(40, 50, 40, 50));
 
-        JLabel lblBib = new JLabel("BIBLIOTECA");
-        lblBib.setForeground(new Color(120, 120, 120));
-        lblBib.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lblBib.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JScrollPane scrollSin = new JScrollPane(txtSinopseModern);
+        scrollSin.setOpaque(false);
+        scrollSin.getViewport().setOpaque(false);
+        scrollSin.setBorder(null);
 
-        JButton btnNovo = criarBotaoMenu("Novo Livro", "", "icons/add_circle.svg");
-        btnNovo.setBackground(COR_DESTAQUE);
-        btnNovo.setForeground(Color.WHITE);
-        btnNovo.setContentAreaFilled(true);
-        btnNovo.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnNovo.setFocusPainted(false);
-        btnNovo.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
-        btnNovo.addActionListener(e -> new AddLivro(this, modelosMap).setVisible(true));
+        JPanel pBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        pBotoes.setOpaque(false);
+        pBotoes.add(btnAbrir); pBotoes.add(btnConcluir); pBotoes.add(btnDelete);
 
-        menu.add(lblBib);
-        menu.add(Box.createRigidArea(new Dimension(0, 30)));
-        menu.add(btnNovo);
-        menu.add(Box.createRigidArea(new Dimension(0, 50)));
+        p.add(lblCapa);
+        p.add(Box.createRigidArea(new Dimension(0, 20)));
+        p.add(lblTituloInfo);
+        p.add(lblAutorDestaque);
+        p.add(Box.createRigidArea(new Dimension(0, 25)));
+        p.add(barraProgresso);
+        p.add(Box.createRigidArea(new Dimension(0, 25)));
+        p.add(scrollSin);
+        p.add(Box.createRigidArea(new Dimension(0, 30)));
+        p.add(pBotoes);
 
-        menu.add(criarBotaoMenu("Lendo", "lendo", "icons/book.svg"));
-        menu.add(Box.createRigidArea(new Dimension(0, 20)));
-        menu.add(criarBotaoMenu("Quero Ler", "querolar", "icons/bookmark.svg"));
-        menu.add(Box.createRigidArea(new Dimension(0, 20)));
-        menu.add(criarBotaoMenu("Lidos", "lidos", "icons/library_add_check.svg"));
-
-        return menu;
+        return p;
     }
 
-    private JButton criarBotaoMenu(String texto, String id, String pathIcone) {
-        JButton b = new JButton(texto);
-        if (pathIcone != null) {
-            try { b.setIcon(new FlatSVGIcon(pathIcone, 18, 18)); } catch (Exception e) {}
+    private void renderizarInterface() {
+        lblTituloInfo.setText(livroSelecionadoAtual.getNomeDoLivro());
+        lblAutorDestaque.setText("por " + livroSelecionadoAtual.getAutor());
+        txtSinopseModern.setText(livroSelecionadoAtual.getBiografia());
+        lblCapa.setIcon(redimensionarIcone(livroSelecionadoAtual.getPathCapa(), 220, 310));
+        lblCapa.setText(lblCapa.getIcon() == null ? "Sem Capa" : "");
+
+        barraProgresso.setVisible(!categoriaAtiva.equals("querolar"));
+        if (barraProgresso.isVisible()) barraProgresso.setValue(livroSelecionadoAtual.calcularPorcentagem());
+
+        btnAbrir.setVisible(true);
+        btnConcluir.setVisible(!categoriaAtiva.equals("lidos"));
+        btnDelete.setVisible(true);
+    }
+
+    private void concluirLivro() {
+        if (livroSelecionadoAtual == null) return;
+        livrosLendo.remove(livroSelecionadoAtual);
+        if (!livrosLidos.contains(livroSelecionadoAtual)) livrosLidos.add(livroSelecionadoAtual);
+        salvarEAtualizarTudo();
+        limparInterface();
+    }
+
+    private void excluirLivro() {
+        if (livroSelecionadoAtual == null) return;
+        if (JOptionPane.showConfirmDialog(this, "Excluir livro?") == JOptionPane.YES_OPTION) {
+            livrosLendo.remove(livroSelecionadoAtual);
+            livrosParaLer.remove(livroSelecionadoAtual);
+            livrosLidos.remove(livroSelecionadoAtual);
+            salvarEAtualizarTudo();
+            limparInterface();
         }
-        b.setBackground(COR_MENU);
-        b.setForeground(COR_TEXTO);
-        b.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        b.setHorizontalAlignment(SwingConstants.LEFT);
-        b.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
-        b.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 10));
-        b.setIconTextGap(15);
-        b.setFocusPainted(false);
-        b.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        b.setContentAreaFilled(false);
-        b.setOpaque(true);
-
-        if (!id.isEmpty()) b.addActionListener(e -> cardLayout.show(painelConteudo, id));
-
-        b.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                b.setBackground(new Color(50, 50, 50));
-                b.setContentAreaFilled(true);
-            }
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                b.setBackground(COR_MENU);
-                b.setContentAreaFilled(false);
-            }
-        });
-
-        if (!id.isEmpty()) {
-            b.addActionListener(e -> {
-                cardLayout.show(painelConteudo, id);
-                // RESET: Esconde a barra e limpa a seleção ao trocar de aba
-                barraProgresso.setVisible(false);
-                lblTituloInfo.setText("Selecione um livro");
-                livroSelecionadoAtual = null;
-            });
-        }
-        return b;
     }
 
     private void moverParaLendo(Cadastro livro) {
         livrosParaLer.remove(livro);
         if (!livrosLendo.contains(livro)) livrosLendo.add(livro);
-        modelosMap.get("querolar").removeElement(livro);
-        modelosMap.get("lendo").addElement(livro);
-        Salvar.salvarDados(livrosParaLer, PASTA_DADOS + "querolar.json");
-        Salvar.salvarDados(livrosLendo, PASTA_DADOS + "lendo.json");
-        cardLayout.show(painelConteudo, "lendo");
+        salvarEAtualizarTudo();
+        cardLayout.show(painelCartoes, "lendo");
+        categoriaAtiva = "lendo";
     }
 
-    private void abrirVisualizadorPDF(Cadastro livro, JTextArea t, String cat) {
-        try {
-            executaPDF v = new executaPDF(livro, livrosLendo);
-            v.setVisible(true);
-            v.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override public void windowClosed(java.awt.event.WindowEvent e) { renderizarDetalhes(t, cat); }
-            });
-        } catch (Exception ex) { ex.printStackTrace(); }
+    private void abrirPDF() {
+        executaPDF v = new executaPDF(livroSelecionadoAtual, livrosLendo);
+        v.setVisible(true);
+        v.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override public void windowClosed(java.awt.event.WindowEvent e) { renderizarInterface(); }
+        });
     }
 
-    private void executarConclusao(String de, JTextArea t, JButton b1, JButton b2, JButton b3) {
-        if (livroSelecionadoAtual == null) return;
-        Cadastro alvo = livroSelecionadoAtual;
-        if (de.equals("lendo")) livrosLendo.remove(alvo);
-        else if (de.equals("querolar")) livrosParaLer.remove(alvo);
-        livrosLidos.add(alvo);
-        Salvar.salvarDados(livrosLendo, PASTA_DADOS + "lendo.json");
-        Salvar.salvarDados(livrosParaLer, PASTA_DADOS + "querolar.json");
-        Salvar.salvarDados(livrosLidos, PASTA_DADOS + "lidos.json");
-        modelosMap.get(de).removeElement(alvo);
-        modelosMap.get("lidos").addElement(alvo);
-        limparDetalhesGerais(t, b1, b2, b3);
-        JOptionPane.showMessageDialog(this, "Livro Concluído! 🎉");
+    private void limparInterface() {
+        livroSelecionadoAtual = null;
+        lblTituloInfo.setText("Selecione um livro");
+        lblAutorDestaque.setText(" ");
+        lblCapa.setIcon(null); lblCapa.setText("Sem Capa");
+        txtSinopseModern.setText("");
+        barraProgresso.setVisible(false);
+        btnAbrir.setVisible(false); btnConcluir.setVisible(false); btnDelete.setVisible(false);
     }
 
-    private void renderizarDetalhes(JTextArea txt, String categoria) {
-        if (livroSelecionadoAtual == null) return;
-
-        lblTituloInfo.setText(livroSelecionadoAtual.getNomeDoLivro());
-
-        // Nova lógica de verificação mais robusta
-        boolean ehQueroLer = categoria.toLowerCase().contains("quero") || categoria.toLowerCase().contains("querolar");
-
-        if (ehQueroLer) {
-            barraProgresso.setVisible(false);
-        } else {
-            int p = livroSelecionadoAtual.calcularPorcentagem();
-            barraProgresso.setValue(p);
-            barraProgresso.setVisible(true);
-        }
-
-        txt.setText(String.format("Autor: %s\nProgresso: %d / %d páginas (%d%%)\nLocal: %s\n\n--- Sinopse ---\n%s",
-                livroSelecionadoAtual.getAutor(),
-                livroSelecionadoAtual.getUltimaPagina(),
-                livroSelecionadoAtual.getQtdPag(),
-                livroSelecionadoAtual.calcularPorcentagem(),
-                livroSelecionadoAtual.getPathPDF(),
-                livroSelecionadoAtual.getBiografia()));
+    private void inicializarDados() {
+        File f = new File(PASTA_DADOS); if (!f.exists()) f.mkdirs();
+        livrosLidos = Salvar.carregarDados(PASTA_DADOS + "lidos.json");
+        livrosLendo = Salvar.carregarDados(PASTA_DADOS + "lendo.json");
+        livrosParaLer = Salvar.carregarDados(PASTA_DADOS + "querolar.json");
     }
 
-    private void limparDetalhesGerais(JTextArea t, JButton b1, JButton b2, JButton b3) {
-        livroSelecionadoAtual = null; lblTituloInfo.setText("Selecione um livro");
-        barraProgresso.setVisible(false); t.setText("");
-        b1.setVisible(false); b2.setVisible(false); b3.setVisible(false);
+    private JPanel criarMenuLateral() {
+        JPanel m = new JPanel();
+        m.setLayout(new BoxLayout(m, BoxLayout.Y_AXIS));
+        m.setBackground(COR_MENU);
+        m.setPreferredSize(new Dimension(230, 0));
+        m.setBorder(new EmptyBorder(30, 20, 30, 20));
+
+        JButton btnNovo = criarBotaoMenu(" + Novo Livro", "");
+        btnNovo.setBackground(COR_DESTAQUE); btnNovo.setOpaque(true);
+        btnNovo.addActionListener(e -> new AddLivro(this, modelosMap).setVisible(true));
+
+        m.add(btnNovo);
+        m.add(Box.createRigidArea(new Dimension(0, 40)));
+        m.add(criarBotaoMenu("Lendo", "lendo"));
+        m.add(Box.createRigidArea(new Dimension(0, 15)));
+        m.add(criarBotaoMenu("Quero Ler", "querolar"));
+        m.add(Box.createRigidArea(new Dimension(0, 15)));
+        m.add(criarBotaoMenu("Lidos", "lidos"));
+
+        return m;
     }
 
-    private JButton criarBotaoAcao(String t, Color c) {
+    private JButton criarBotaoMenu(String txt, String id) {
+        JButton b = new JButton(txt);
+        b.setForeground(COR_TEXTO); b.setBackground(COR_MENU);
+        b.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        b.setHorizontalAlignment(SwingConstants.LEFT);
+        b.setFocusPainted(false); b.setBorder(new EmptyBorder(0, 15, 0, 15));
+        if (!id.isEmpty()) b.addActionListener(e -> {
+            cardLayout.show(painelCartoes, id);
+            categoriaAtiva = id;
+            limparInterface();
+        });
+        return b;
+    }
+
+    private JButton criarBotaoEstilizado(String t, Color c) {
         JButton b = new JButton(t);
-        b.setBackground(c);
-        b.setForeground(Color.WHITE);
-        b.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        b.setBackground(c); b.setForeground(Color.WHITE);
+        b.setFont(new Font("Segoe UI", Font.BOLD, 14));
         b.setFocusPainted(false);
-        b.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        b.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        b.setBorder(BorderFactory.createEmptyBorder(12, 25, 12, 25));
         return b;
     }
 }

@@ -1,11 +1,13 @@
 Cadastro\executaPDF$1.class
-Cadastro\Salvar$1.class
-Cadastro\Cadastro.class
+Cadastro\Tela$2.class
 Cadastro\Tela.class
-Cadastro\Main.class
 Cadastro\Salvar.class
 Cadastro\LivroService.class
+Cadastro\AddLivro.class
+Cadastro\executaPDF.class
+Cadastro\Salvar$1.class
+Cadastro\Cadastro.class
+Cadastro\Main.class
 Cadastro\executaPDF$3.class
 Cadastro\Tela$1.class
 Cadastro\executaPDF$2.class
-Cadastro\executaPDF.class

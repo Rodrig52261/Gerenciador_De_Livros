@@ -1,11 +1,12 @@
 [
   {
-    "nomeDoLivro": "Antoine De Saint-Exupéry - O Pequeno Príncipe",
-    "autor": "Tiemi",
-    "biografia": "Erro ao buscar biografia online.",
+    "nomeDoLivro": "O Pequeno Príncipe",
+    "autor": "Antoine de Saint-Exupéry",
+    "biografia": "A LÉON WERTH QUANDO ELE ERA PEQUENINO I Certa vez, quando tinha seis anos, vi num livro sobre a Floresta Virgem, Histórias Vividas , uma imponente gravura. Representava ela uma jibóia que engolia uma fera. Eis a cópia do desenho. Dizia o livro: As jibóias engolem, sem mastigar, a presa inteira. Em seguida, não podem mover-se e dormem os seis meses da digestão. Refleti muito então sobre as aventuras da selva, e fiz, com lápis de cor, o meu primeiro desenho. Meu desenho número 1 era assim: Mostrei minha obra-prima às pessoas grandes e perguntei se o meu desenho lhes fazia medo. Responderam-me: Por que é que um chapéu faria medo? Meu desenho não representava um chapéu. Representava uma jibóia digerindo um elefante. Desenhei então o interior da jibóia, a fim de que as pessoas grandes pudessem compreender. Elas têm sempre necessidade de explicações. Meu desenho número 2 era assim: As pessoas grandes aconselharam-me deixar de lado os desenhos de jibóias abertas ou fechadas, e dedicar-me de preferência à geografia, à história, ao cálculo, à gramática. Foi assim que abandonei, aos seis anos, uma esplêndida carreira de pintor. Eu fora desencorajado pelo insucesso do meu desenho número 1 e do meu desenho número 2. As pessoas grandes não compreendem nada sozinhas, e é cansativo, para as crianças, estar toda hora explicando. Tive pois de escolher uma outra profissão e aprendi a pilotar aviões. Voei, por assim dizer, por todo o mundo. E a geografia, é claro, me serviu muito. Sabia distinguir, num relance, a China e o Arizona. É muito útil, quando se está perdido na noite. Tive assim, no correr da vida, muitos contatos com muita gente séria. Vivi muito no meio das pessoas grandes.",
     "qtdPag": 69,
     "paginasLidas": 0,
     "pathPDF": "C:\\Users\\mcbil\\Downloads\\O_Pequeno_Príncipe.pdf",
-    "ultimaPagina": 0
+    "ultimaPagina": 0,
+    "pathCapa": "https://books.google.com/books/content?id\u003dXSxKEAAAQBAJ\u0026printsec\u003dfrontcover\u0026img\u003d1\u0026zoom\u003d1\u0026edge\u003dcurl\u0026source\u003dgbs_api"
   }
 ]
