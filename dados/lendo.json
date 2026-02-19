@@ -1,42 +1,52 @@
 [
   {
-    "nomeDoLivro": "Sapiens: História Breve da Humanidade",
-    "autor": "",
-    "biografia": "Uma obra elogiadíssima em todo o mundo, incluindo por Barack Obama, Bill Gates e Mark Zuckerberg. O fogo deu-nos poder. O boato ajudou-nos a saber cooperar. A agricultura aumentou o nosso apetite. A mitologia manteve a lei e a ordem. O dinheiro deu-nos algo em que confiar. As contradições geraram a cultura. A ciência fez-nos letais. Recorrendo a ideias da paleontologia, antropologia e sociologia, Yuval Noah Harari analisa os principais saltos evolutivos da humanidade, desde as espécies humanas que coexistiam na Idade da Pedra até às revoluções tecnológicas e políticas do século XXI - que nos transformaram em deuses, capazes de criar e de destruir. Esta é uma obra desafiadora, desconcertante e inteligente, uma perspetiva única e original sobre a nossa História e o impacto do ser humano no planeta. Os elogios da crítica: «Interessante e estimulante, é um livro que nos dá uma perspetiva sobre o quão recente são a nossa presença na Terra e aspetos da vida humana como a agricultura e a ciência, e sobre por que razões devemos evitar dá-las como certas.» — Barack Obama «Sapiens é para a história da evolução humana o que Breve História do Tempo, de Stephen Hawking, representou para a física.» — Forbes",
-    "qtdPag": 363,
-    "paginasLidas": 16,
-    "pathPDF": "C:\\Users\\mcbil\\Downloads\\Sapiens uma Breve História da Humanidade - Yuval Noah Harari.pdf",
-    "ultimaPagina": 16,
-    "pathCapa": "https://books.google.com/books/content?id\u003dNZZWEAAAQBAJ\u0026printsec\u003dfrontcover\u0026img\u003d1\u0026zoom\u003d1\u0026edge\u003dcurl\u0026source\u003dgbs_api"
-  },
-  {
     "nomeDoLivro": "O Alienista",
-    "autor": "Machado De Assis",
-    "biografia": "\u0027Uma das mais notáveis obras de Machado de Assis, O Alienista deve grande parte de sua popularidade às varias adaptações que recebeu, entre HQs, versão para o cinema e minisséries para a TV. O autor usa esta comédia de enganos, ou fábula com ar de novela histórica, para debater os limites entre sanidade e loucura. Além disso, critica o charlatanismo psiquiátrico, em uma época em que fervilham as teorias cientificistas, sobretudo o positivismo, a ausência de uma comunidade letrada e a inexistência da imprensa na sociedade brasileira.",
+    "autor": "Assis, Machado de",
+    "biografia": "O Alienista é a obra que transforma curiosidade em vício: um médico brilhante decide estudar a mente humana e acaba virando o maior causador de caos da cidade. Entre diagnósticos duvidosos e internações inesperadas, a história expõe com humor fino e intel",
     "qtdPag": 45,
     "paginasLidas": 0,
     "pathPDF": "C:\\Users\\mcbil\\Downloads\\O Alienista - Machado de Assis (1).pdf",
     "ultimaPagina": 0,
-    "pathCapa": "https://books.google.com/books/content?id\u003d0XnlDwAAQBAJ\u0026printsec\u003dfrontcover\u0026img\u003d1\u0026zoom\u003d1\u0026edge\u003dcurl\u0026source\u003dgbs_api"
+    "pathCapa": "resources/capas/1771359637865.png"
   },
   {
-    "nomeDoLivro": "Por que fazemos o que fazemos?",
-    "autor": "Mario Sergio Cortella",
-    "biografia": "Bateu aquela preguiça de ir para o escritório na segunda-feira? A falta de tempo virou uma constante? A rotina está tirando o prazer no dia a dia? Anda em dúvida sobre qual é o real objetivo de sua vida? O filósofo e escritor Mario Sergio Cortella desvenda em Por que fazemos o que fazemos? as principais preocupações com relação ao trabalho. Dividido em vinte capítulos, ele aborda questões como a importância de ter uma vida com propósito, a motivação em tempos difíceis, os valores e a lealdade – a si e ao seu emprego. O livro é um verdadeiro manual para todo mundo que tem uma carreira mas vive se questionando sobre o presente e o futuro. Recheado de ensinamentos como \\",
-    "qtdPag": 77,
-    "paginasLidas": 0,
-    "pathPDF": "C:\\Users\\mcbil\\Downloads\\Por-Que-Fazemos-O-Que-Fazemos_-Mario-Sergio-Cortella.pdf",
-    "ultimaPagina": 0,
-    "pathCapa": "https://books.google.com/books/content?id\u003dJPHLDAAAQBAJ\u0026printsec\u003dfrontcover\u0026img\u003d1\u0026zoom\u003d1\u0026edge\u003dcurl\u0026source\u003dgbs_api"
-  },
-  {
-    "nomeDoLivro": "Software Architecture. ECSA 2025 Tracks and Workshops",
+    "nomeDoLivro": "Arquitetura Limpa - O Guia do Artesão para Estrutura e Design de Software",
     "autor": "Robert C. Martin",
-    "biografia": "This book constitutes the refereed proceedings of the tracks and workshops which complemented the 19th European Conference on Software Architecture, ECSA 2025, held in Limassol, Cyprus, during September 15–19, 2025. The 13 full papers and 19 short papers presented in this volume were carefully reviewed and selected from 56 submissions. They are grouped into the following topics: Tools and Demos; Tutorial; Doctoral Symposium; 1st International Workshop on AI-Assisted Software Architecting (AISA); 5th International Workshop on Agility with Microservices Programming (AMP); 1st International Workshop on Architecting Digital Twin of an Organization (ArchDTO); 12th Workshop on Adaptive and Reconfigurable Systems and Architectures (AROSA); 8th International Workshop on Context-Aware, Autonomous and Smart Architectures (CASA); 1st International Workshop on Software Architecture for Data-Intensive Systems (SADIS).",
+    "biografia": "Arquitetura Limpa - O Guia do Artesão para Estrutura e Design de Software\", de Robert C. Martin (Uncle Bob), apresenta regras universais e práticas essenciais para criar sistemas de software de alta qualidade, focados na manutenção e produtividade a longo prazo. O livro detalha como separar componentes, definir limites de camadas e aplicar princípios como SOLID para desacoplar regras de negócio de detalhes técnicos como bancos de dados e interfaces. ",
     "qtdPag": 381,
-    "paginasLidas": 24,
+    "paginasLidas": 0,
     "pathPDF": "C:\\Users\\mcbil\\Downloads\\Arquitetura Limpa - O Guia do Artesão para Estrutura e Design de Software (Robert C. Martin) (z-lib.org).pdf",
-    "ultimaPagina": 24,
-    "pathCapa": "https://books.google.com/books/content?id\u003dTwSFEQAAQBAJ\u0026printsec\u003dfrontcover\u0026img\u003d1\u0026zoom\u003d1\u0026edge\u003dcurl\u0026source\u003dgbs_api"
+    "ultimaPagina": 0,
+    "pathCapa": "resources/capas/1771359693646.png"
+  },
+  {
+    "nomeDoLivro": "Antoine De Saint-Exupéry - O Pequeno Príncipe",
+    "autor": "Antoine de Saint-Exupéry",
+    "biografia": "O Pequeno Príncipe é uma obra de Antoine de Saint-Exupéry, publicada em 1943, quando estava no exílio em Nova Iorque. Esta pequena história usa uma linguagem muito simples, dando-lhe a aparência de um conto infantil. No entanto, sua dimensão poética e filosófica faz parecer que ela se dirige igualmente aos adultos. O tema central da história é a amizade: o que ela significa, como construí-la, o que ela pode trazer de vida. O comportamento das pessoas que o príncipezinho encontra lhe dá, a cada vez, elementos de resposta. Assim, graças a eles, ele percebe a beleza desse laço especial. Como age um verdadeiro amigo?",
+    "qtdPag": 69,
+    "paginasLidas": 0,
+    "pathPDF": "C:\\Users\\mcbil\\Downloads\\O_Pequeno_Príncipe.pdf",
+    "ultimaPagina": 0,
+    "pathCapa": "resources/capas/1771359794810.png"
+  },
+  {
+    "nomeDoLivro": "Albert Camus - O estrangeiro",
+    "autor": "LG",
+    "biografia": "Erro ao buscar biografia online.",
+    "qtdPag": 82,
+    "paginasLidas": 0,
+    "pathPDF": "C:\\Users\\mcbil\\Downloads\\Albert Camus - O estrangeiro.pdf",
+    "ultimaPagina": 0,
+    "pathCapa": "resources/capas/1771476311849.png"
+  },
+  {
+    "nomeDoLivro": "Sapiens Uma Breve História da Humanidade",
+    "autor": "Yuval Noah Harari",
+    "biografia": "Erro ao buscar biografia online.",
+    "qtdPag": 506,
+    "paginasLidas": 0,
+    "pathPDF": "C:\\Users\\mcbil\\Downloads\\Sapiens uma Breve História da Humanidade - Yuval Noah Harari.pdf",
+    "ultimaPagina": 0,
+    "pathCapa": "resources/capas/1771476370026.png"
   }
 ]

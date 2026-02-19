@@ -2,6 +2,7 @@ package Cadastro;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import javax.swing.*;
+import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -18,6 +19,7 @@ public class Main {
             UIManager.put("ScrollBar.width", 6);
 
             // 3. Aplica o Tema Dark
+            UIManager.put("defaultFont", new Font("Segoe UI", Font.PLAIN, 14));
             FlatDarkLaf.setup();
 
             // 4. Inicia a aplicação

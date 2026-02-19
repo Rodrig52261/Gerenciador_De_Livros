@@ -1,0 +1,85 @@
+[
+  {
+    "nomeDoLivro": "O Alienista",
+    "autor": "Assis, Machado de",
+    "biografia": "O Alienista é a obra que transforma curiosidade em vício: um médico brilhante decide estudar a mente humana e acaba virando o maior causador de caos da cidade. Entre diagnósticos duvidosos e internações inesperadas, a história expõe com humor fino e intel",
+    "qtdPag": 45,
+    "paginasLidas": 0,
+    "pathPDF": "C:\\Users\\mcbil\\Downloads\\O Alienista - Machado de Assis (1).pdf",
+    "ultimaPagina": 0,
+    "pathCapa": "resources/capas/1771359637865.png",
+    "favoritos": [],
+    "grifos": []
+  },
+  {
+    "nomeDoLivro": "Arquitetura Limpa - O Guia do Artesão para Estrutura e Design de Software",
+    "autor": "Robert C. Martin",
+    "biografia": "Arquitetura Limpa - O Guia do Artesão para Estrutura e Design de Software\", de Robert C. Martin (Uncle Bob), apresenta regras universais e práticas essenciais para criar sistemas de software de alta qualidade, focados na manutenção e produtividade a longo prazo. O livro detalha como separar componentes, definir limites de camadas e aplicar princípios como SOLID para desacoplar regras de negócio de detalhes técnicos como bancos de dados e interfaces. ",
+    "qtdPag": 381,
+    "paginasLidas": 2,
+    "pathPDF": "C:\\Users\\mcbil\\Downloads\\Arquitetura Limpa - O Guia do Artesão para Estrutura e Design de Software (Robert C. Martin) (z-lib.org).pdf",
+    "ultimaPagina": 2,
+    "pathCapa": "resources/capas/1771359693646.png",
+    "favoritos": [],
+    "grifos": []
+  },
+  {
+    "nomeDoLivro": "Antoine De Saint-Exupéry - O Pequeno Príncipe",
+    "autor": "Antoine de Saint-Exupéry",
+    "biografia": "O Pequeno Príncipe é uma obra de Antoine de Saint-Exupéry, publicada em 1943, quando estava no exílio em Nova Iorque. Esta pequena história usa uma linguagem muito simples, dando-lhe a aparência de um conto infantil. No entanto, sua dimensão poética e filosófica faz parecer que ela se dirige igualmente aos adultos. O tema central da história é a amizade: o que ela significa, como construí-la, o que ela pode trazer de vida. O comportamento das pessoas que o príncipezinho encontra lhe dá, a cada vez, elementos de resposta. Assim, graças a eles, ele percebe a beleza desse laço especial. Como age um verdadeiro amigo?",
+    "qtdPag": 69,
+    "paginasLidas": 0,
+    "pathPDF": "C:\\Users\\mcbil\\Downloads\\O_Pequeno_Príncipe.pdf",
+    "ultimaPagina": 0,
+    "pathCapa": "resources/capas/1771359794810.png",
+    "favoritos": [],
+    "grifos": []
+  },
+  {
+    "nomeDoLivro": "Albert Camus - O estrangeiro",
+    "autor": "LG",
+    "biografia": "Erro ao buscar biografia online.",
+    "qtdPag": 82,
+    "paginasLidas": 0,
+    "pathPDF": "C:\\Users\\mcbil\\Downloads\\Albert Camus - O estrangeiro.pdf",
+    "ultimaPagina": 0,
+    "pathCapa": "resources/capas/1771476311849.png",
+    "favoritos": [],
+    "grifos": []
+  },
+  {
+    "nomeDoLivro": "Sapiens Uma Breve História da Humanidade",
+    "autor": "Yuval Noah Harari",
+    "biografia": "Erro ao buscar biografia online.",
+    "qtdPag": 506,
+    "paginasLidas": 0,
+    "pathPDF": "C:\\Users\\mcbil\\Downloads\\Sapiens uma Breve História da Humanidade - Yuval Noah Harari.pdf",
+    "ultimaPagina": 0,
+    "pathCapa": "resources/capas/1771476370026.png",
+    "favoritos": [],
+    "grifos": []
+  },
+  {
+    "nomeDoLivro": "Por Que Fazemos O Que Fazemos?",
+    "autor": "Mario Sergio Cortella",
+    "biografia": "Erro ao buscar biografia online.",
+    "qtdPag": 77,
+    "paginasLidas": 9,
+    "pathPDF": "C:\\Users\\mcbil\\Downloads\\Por-Que-Fazemos-O-Que-Fazemos_-Mario-Sergio-Cortella.pdf",
+    "ultimaPagina": 6,
+    "pathCapa": "resources/capas/1771479790615.png",
+    "favoritos": [
+      "Página 7",
+      "Página 7 (Grifo)"
+    ],
+    "grifos": [
+      {
+        "pagina": 6,
+        "xRatio": 0.10900473933649289,
+        "yRatio": 0.2206959706959707,
+        "wRatio": 0.7890995260663507,
+        "hRatio": 0.08974358974358974
+      }
+    ]
+  }
+]

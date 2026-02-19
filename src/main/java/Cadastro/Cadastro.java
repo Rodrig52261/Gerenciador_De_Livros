@@ -3,6 +3,7 @@ package Cadastro;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Cadastro {
@@ -15,6 +16,10 @@ public class Cadastro {
     private String pathPDF;
     private int ultimaPagina; // Onde o marcador de página realmente fica
     private String pathCapa;
+
+    //Grifo
+    private List<String> favoritos = new ArrayList<>();
+    private List<Grifo> grifos = new ArrayList<>();
 
     // --- GETTERS ---
     public String getNomeDoLivro() { return nomeDoLivro; }
@@ -107,5 +112,21 @@ public class Cadastro {
 
     public String getPathCapa() {
         return pathCapa;
+    }
+
+    public List<String> getFavoritos() {
+        return favoritos;
+    }
+
+    public void setFavoritos(List<String> favoritos) {
+        this.favoritos = favoritos;
+    }
+
+    public List<Grifo> getGrifos() {
+        return grifos;
+    }
+
+    public void setGrifos(List<Grifo> grifos) {
+        this.grifos = grifos;
     }
 }
