@@ -47,10 +47,15 @@ Para uma navegação mais fluida, o leitor possui os seguintes atalhos:
 Tela: Gerenciador da interface gráfica e eventos de usuário.
 
 
-<img width="1366" height="767" alt="image" src="https://github.com/user-attachments/assets/f820bac4-9813-458e-83ad-670f7466d9f6" />
-<img width="783" height="762" alt="image" src="https://github.com/user-attachments/assets/f2fa9f4a-9ec7-4d81-8498-ef6eb03e74c9" />
-<img width="488" height="757" alt="image" src="https://github.com/user-attachments/assets/8fe9310d-9a2e-4eeb-b758-0221a46c65f1" />
-<img width="870" height="762" alt="image" src="https://github.com/user-attachments/assets/4227cc50-d789-47d1-a627-06ccbd0ffd93" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/28d1019d-fc9e-43ab-8c5c-3083fae07169" />
+<img width="1365" height="767" alt="image" src="https://github.com/user-attachments/assets/b92c73e8-37fe-4df7-9d07-5e6546df6327" />
+<img width="1366" height="765" alt="image" src="https://github.com/user-attachments/assets/bb238d7c-28f8-40b5-8f76-4ab6c9d26396" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/d0493434-39dd-4674-80c4-4d45c3dd225e" />
+
+
+
+
+
 
 
 
