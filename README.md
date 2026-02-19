@@ -1,27 +1,48 @@
-🚀 Funcionalidades Principais
-Organização por Status: Divisão clara entre livros "Lidos", "Lendo" e "Quero Ler" usando uma interface de abas dinâmicas.
+# 📚 Gerenciador e Leitor de Livros (Java)
 
-Interface Mestre-Detalhe: Lista interativa à esquerda com painel de detalhes à direita, exibindo biografia, autor e progresso.
+Um aplicativo desktop moderno desenvolvido em Java para gerenciar sua biblioteca pessoal de PDFs e oferecer uma experiência de leitura avançada, confortável e interativa.
 
-Persistência de Dados: Salvamento automático em arquivos JSON, garantindo que seus dados não sejam perdidos ao fechar o app.
+## ✨ Funcionalidades
 
-Movimentação Inteligente: Botão para marcar livros como concluídos, movendo-os automaticamente entre abas e atualizando o progresso para 100% em tempo real.
+### 📖 Gerenciamento
+* **Cadastro de Livros:** Adicione e organize seus livros em formato PDF.
+* **Persistência de Dados:** Todo o progresso de leitura, favoritos e grifos são salvos automaticamente em formato `JSON`. O aplicativo sempre lembra onde você parou!
 
-Design Customizado: Interface moderna com suporte a Dark Mode e componentes de interface (UI) otimizados com JScrollPane e CardLayout.
+### 🔍 Leitor de PDF Embutido
+* **Visualização Flexível:** Alterne entre visualização de página única ou página dupla (estilo livro aberto).
+* **Modo Noturno (Dark Mode):** Inversão inteligente de cores do PDF para leituras confortáveis em ambientes escuros, com otimização nativa de performance.
+* **Zoom Interativo:** Controle total sobre o tamanho da página usando atalhos de teclado ou a rodinha do mouse, com renderização de alta qualidade (Graphics2D Bilinear).
+* **Sistema de Grifos (Marca-texto):** Selecione e grife partes importantes da página. Os grifos são calculados de forma proporcional, mantendo o alinhamento perfeito mesmo quando você altera o zoom.
+* **Marcadores / Favoritos:** Salve páginas importantes e acesse-as rapidamente através de um painel lateral retrátil.
 
-🛠️ Tecnologias Utilizadas
-Java SE: Linguagem principal.
+## 🛠️ Tecnologias Utilizadas
 
-Swing: Biblioteca para a interface gráfica (GUI).
+* **Java (Swing):** Interface gráfica nativa do projeto.
+* **[Apache PDFBox](https://pdfbox.apache.org/):** Motor robusto para carregamento e renderização das páginas do PDF.
+* **[FlatLaf](https://www.formdev.com/flatlaf/):** Look and Feel moderno que traz um design limpo e renderização de ícones em SVG.
+* **JSON (Jackson/Gson):** Estruturação e salvamento dos dados do usuário (`lendo.json`).
 
-Gson (Google): Para a serialização e desserialização de objetos em JSON.
+## ⌨️ Atalhos de Teclado (Leitor)
 
-Arquitetura POO: Separação de responsabilidades entre classes de modelo, lógica de arquivos e interface.
+Para uma navegação mais fluida, o leitor possui os seguintes atalhos:
 
-📂 Estrutura do Projeto
-Cadastro: Classe modelo que representa o objeto Livro.
+| Ação | Atalho |
+| :--- | :--- |
+| **Próxima Página** | `Seta para Direita` |
+| **Página Anterior** | `Seta para Esquerda` |
+| **Rolar para Cima/Baixo** | `Seta Cima` / `Seta Baixo` |
+| **Ativar/Desativar Grifo** | `CTRL + M` (ou segure `SHIFT` e arraste) |
+| **Favoritar Página Atual** | `CTRL + D` |
+| **Zoom In (+)** | `CTRL + Rodinha do Mouse p/ cima` ou `CTRL +` |
+| **Zoom Out (-)** | `CTRL + Rodinha do Mouse p/ baixo` ou `CTRL -` |
+| **Resetar Zoom (100%)** | `CTRL + 0` |
 
-Salvar: Classe utilitária responsável pela gestão de entrada/saída de dados (I/O).
+## 🚀 Como Executar o Projeto
+
+1. Certifique-se de ter o **Java JDK** instalado em sua máquina.
+2. Clone este repositório:
+   ```bash
+   git clone [https://github.com/SeuUsuario/Gerenciador_De_Livros.git](https://github.com/SeuUsuario/Gerenciador_De_Livros.git)
 
 Tela: Gerenciador da interface gráfica e eventos de usuário.
 
