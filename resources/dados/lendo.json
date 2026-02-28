@@ -16,12 +16,30 @@
     "autor": "Robert C. Martin",
     "biografia": "Arquitetura Limpa - O Guia do Artesão para Estrutura e Design de Software\", de Robert C. Martin (Uncle Bob), apresenta regras universais e práticas essenciais para criar sistemas de software de alta qualidade, focados na manutenção e produtividade a longo prazo. O livro detalha como separar componentes, definir limites de camadas e aplicar princípios como SOLID para desacoplar regras de negócio de detalhes técnicos como bancos de dados e interfaces. ",
     "qtdPag": 381,
-    "paginasLidas": 2,
+    "paginasLidas": 24,
     "pathPDF": "C:\\Users\\mcbil\\Downloads\\Arquitetura Limpa - O Guia do Artesão para Estrutura e Design de Software (Robert C. Martin) (z-lib.org).pdf",
-    "ultimaPagina": 2,
+    "ultimaPagina": 24,
     "pathCapa": "resources/capas/1771359693646.png",
-    "favoritos": [],
-    "grifos": []
+    "favoritos": [
+      "Página 25",
+      "Página 25 (Grifo)"
+    ],
+    "grifos": [
+      {
+        "pagina": 24,
+        "xRatio": 0.15091210613598674,
+        "yRatio": 0.2641025641025641,
+        "wRatio": 0.724709784411277,
+        "hRatio": 0.06923076923076923
+      },
+      {
+        "pagina": 24,
+        "xRatio": 0.15422885572139303,
+        "yRatio": 0.33205128205128204,
+        "wRatio": 0.24046434494195687,
+        "hRatio": 0.02435897435897436
+      }
+    ]
   },
   {
     "nomeDoLivro": "Antoine De Saint-Exupéry - O Pequeno Príncipe",

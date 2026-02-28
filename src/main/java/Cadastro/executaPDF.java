@@ -1,7 +1,6 @@
 package Cadastro;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import jdk.internal.icu.text.UnicodeSet;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -114,6 +113,27 @@ public class executaPDF extends JFrame {
         configurarEventosMouse(labelPagDireita);
 
         modelFavoritos = new DefaultListModel<>();
+
+        if (livro.getFavoritos() != null) {
+            for (String fav : livro.getFavoritos()) {
+                modelFavoritos.addElement(fav);
+
+                // Extrai o número da página (para evitar que o usuário favorite a mesma página duas vezes)
+                try {
+                    String numeroStr = fav.replaceAll("[^0-9]", ""); // Pega apenas os números do texto
+                    if (!numeroStr.isEmpty()) {
+                        // Salva na lista de controle (subtrai 1 porque nosso sistema conta a partir do 0)
+                        favoritos.add(Integer.parseInt(numeroStr) - 1);
+                    }
+                } catch (Exception ex) {
+                    System.out.println("Erro ao ler número da página do favorito.");
+                }
+            }
+        }
+
+        listFavoritos = new JList<>(modelFavoritos);
+
+
         listFavoritos = new JList<>(modelFavoritos);
         listFavoritos.setBackground(new Color(30, 30, 30));
         listFavoritos.setForeground(Color.WHITE);
